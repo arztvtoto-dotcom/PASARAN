@@ -3,1085 +3,535 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Togel Pro - Multi Prize</title>
+    <title>Jadwal Togel TVTOTO - Ultimate Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --red-primary: #990000;
-            --red-light: #cc3333;
-            --red-dark: #660000;
-            --red-gradient: linear-gradient(135deg, #008799, #cc3333, #ff4444, #660000);
-            --red-glow: 0 0 20px rgba(153, 0, 0, 0.5);
-            --red-accent: #ff4444;
-            --bg-dark: #1a1a1a;
-            --bg-card: #252525;
-            --text-light: #f8f8f8;
-            --text-secondary: #cccccc;
-            --shadow-red: 0 4px 15px rgba(153, 0, 0, 0.3);
-            --modal-overlay: rgba(0, 0, 0, 0.85);
+            --bg-deep: #050505;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1a0505 0%, #050505 70%);
+            --card-bg: rgba(20, 20, 20, 0.4);
+            --card-border: rgba(255,255,255, 0.08);
+            --neon-red: #ff1744;
+            --gold-accent: #ffd700;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --font-head: 'Oswald', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            padding: 20px;
-            background-image: radial-gradient(circle at 10% 20%, rgba(153, 0, 0, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(204, 51, 51, 0.1) 0%, transparent 20%);
+            background-color: var(--bg-deep);
+            background-image: var(--bg-gradient);
             background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: var(--font-body);
             min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            position: relative;
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+        .sidebar {
+            width: 70px; background: rgba(0,0,0,0.5); border-right:1px solid var(--card-border);
+            display: flex; flex-direction: column; align-items: center; padding: 20px 0;
+            backdrop-filter: blur(10px); z-index: 100; height: 100vh; position: fixed; left: 0; top: 0;
         }
 
+        .nav-btn {
+            width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; margin-bottom: 15px; cursor: pointer; transition: all 0.3s;
+            color: var(--text-secondary); font-size:1.2rem;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--neon-red); color: white; box-shadow: 0 0 15px rgba(255, 23, 68, 0.4);
+        }
+
+        .main-container { margin-left: 70px; width: calc(100% - 70px); position: relative; }
+
+        #introOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease;
+        }
+        #introOverlay.hidden { opacity: 0; pointer-events: none; }
+
+        .intro-logo {
+            font-family: var(--font-head); font-size: 3rem; color: var(--neon-red);
+            letter-spacing: 5px; margin-bottom: 20px; text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255, 23, 68, 0.5);
+        }
+
+        .btn-enter {
+            padding: 15px 40px; background: transparent; border: 2px solid var(--neon-red);
+            color: var(--neon-red); font-family: var(--font-head); font-size: 1.2rem;
+            letter-spacing: 2px; cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+        }
+        .btn-enter:hover { color: #fff; box-shadow: 0 0 30px var(--neon-red); background: var(--neon-red); }
+
+        .header { text-align: center; padding: 40px 20px 20px; }
         .header h1 {
-            font-size: 2.5rem;
-            background: var(--red-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 10px rgba(153, 0, 0, 0.3);
-            margin-bottom: 20px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            animation: glow 2s ease-in-out infinite alternate;
+            font-family: var(--font-head); font-size: 2.8rem; text-transform: uppercase;
+            background: linear-gradient(to right, #fff, var(--neon-red)); -webkit-background-clip: text;
+            background-clip: text; color: transparent; margin-bottom: 10px; letter-spacing: 2px;
         }
 
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 5px rgba(153, 0, 0, 0.5)); }
-            to { filter: drop-shadow(0 0 15px rgba(153, 0, 0, 0.8)); }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 20px auto 30px; padding: 0 20px; }
+        .clock-container {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 10px 25px;
+            border-radius: 50px; display: flex; align-items: center; gap: 15px; backdrop-filter: blur(10px);
+        }
+        .clock-time { font-family: 'Courier New', monospace; font-size: 1.5rem; font-weight: 700; color: var(--text-primary); letter-spacing: 2px; }
+        .sound-badge {
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255, 23, 68, 0.1);
+            border:1px solid rgba(255, 23, 68, 0.3); border-radius: 20px; color: var(--neon-red);
+            font-size: 0.8rem; font-weight: 600; text-transform: uppercase; cursor: pointer;
         }
 
-        .header::after {
-            content: "";
-            display: block;
-            width: 150px;
-            height: 3px;
-            background: var(--red-gradient);
-            margin: 15px auto;
-            border-radius: 3px;
+        .search-wrapper { max-width: 600px; margin: 0 auto 40px; position: relative; padding: 0 20px; }
+        .search-input {
+            width: 100%; padding: 18px 25px 18px 55px; background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 12px; color: white; font-family: var(--font-body); font-size: 1rem; backdrop-filter: blur(5px);
         }
-
-        .sound-control {
-            position: absolute;
-            top: 0;
-            right: 0;
-            cursor: pointer;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--red-primary);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-        
-        .sound-control:hover {
-            background: var(--red-primary);
-            color: white;
-        }
-
-        .datetime-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-
-        .date-box, .time-box {
-            background: var(--bg-card);
-            padding: 15px 30px;
-            border-radius: 12px;
-            border: 2px solid rgba(153, 0, 0, 0.3);
-            box-shadow: var(--shadow-red), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .date-box::before, .time-box::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: var(--red-gradient);
-        }
-
-        .date-label, .time-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .date-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #cc3333, #ff4444);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .time-value {
-            font-size: 2rem;
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #ff4444, #cc3333);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 3px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .time-separator { animation: blink 1s ease-in-out infinite; }
-        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.3; } }
-
-        .wib-badge {
-            font-size: 0.9rem;
-            padding: 4px 12px;
-            background: rgba(153, 0, 0, 0.2);
-            border: 1px solid rgba(204, 51, 51, 0.4);
-            border-radius: 20px;
-            color: var(--red-light);
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .search-container {
-            max-width: 600px;
-            margin: 0 auto 30px;
-            position: relative;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 14px 20px;
-            padding-left: 45px;
-            background: var(--bg-card);
-            border: 1px solid rgba(153, 0, 0, 0.3);
-            border-radius: 8px;
-            color: var(--text-light);
-            font-size: 1rem;
-            box-shadow: var(--shadow-red);
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus {
-            outline: none;
-            border-color: var(--red-primary);
-            box-shadow: 0 0 0 3px rgba(153, 0, 0, 0.2);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--red-primary);
-        }
-
-        .search-results { margin-top: 10px; color: var(--text-secondary); text-align: center; }
+        .search-input:focus { border-color: var(--neon-red); background: rgba(255,255,255,0.05); }
+        .search-icon { position: absolute; left: 38px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
 
         .ttg-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px; max-width: 1400px; margin: 0 auto; padding: 0 20px 60px;
         }
 
         .ttg-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow-red);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(153, 0, 0, 0.2);
-            position: relative;
-            display: flex;
-            flex-direction: column;
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;
+            backdrop-filter: blur(12px); overflow: hidden; transition: all 0.4s; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column;
+        }
+        .ttg-card:hover { transform: translateY(-10px); border-color: var(--neon-red); }
+        
+        .card-header { padding: 20px; background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent); border-bottom: 1px solid var(--card-border); text-align: center; }
+        .market-name { font-family: var(--font-head); font-size: 1.4rem; font-weight: 500; color: var(--text-primary); text-transform: uppercase; }
+        
+        .timer-box { margin-top: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 5px; display: inline-block; min-width: 140px; }
+        .timer-display { font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 2px; }
+        .timer-display.active { color: var(--neon-red); }
+        .timer-display.hourly-active { color: var(--gold-accent); font-family: var(--font-head); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .timer-display.result-mode { color: #fff; background: #b2102f; padding: 5px; border-radius: 4px; border: 1px solid #ff1744; animation: pulse 0.5s infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+
+        .result-area { padding: 15px 20px; background: rgba(0,0,0,0.2); min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        .res-single { font-family: 'Oswald', sans-serif; font-size: 2.2rem; color: var(--gold-accent); text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); letter-spacing: 4px; }
+        .res-multi { width: 100%; display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; text-align: left; }
+        .res-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2px; }
+        
+        .card-body { padding: 15px 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .info-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary); }
+        .info-val { color: var(--text-primary); font-weight: 500; }
+        
+        .card-footer { padding: 15px 20px; border-top: 1px solid var(--card-border); display: flex; gap: 10px; }
+        
+        /* TOMBOL UNIFIKASI (INPUT, WEB, LIVE) */
+        .btn { flex: 1; padding: 10px; border-radius: 6px; font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; text-align: center; text-transform: uppercase; }
+        
+        .btn-input, .btn-web { 
+            background: rgba(255, 23, 68, 0.1); color: var(--neon-red); 
+            border: 1px solid rgba(255, 23, 68, 0.2); 
+        }
+        
+        .btn-input:hover, .btn-web:hover { 
+            background: var(--neon-red); color: white; 
+            box-shadow: 0 0 15px rgba(255, 23, 68, 0.4); 
         }
 
-        .ttg-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 4px;
-            background: var(--red-gradient);
-            z-index: 2;
-        }
+        .settings-view { display: none; padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .settings-view.active { display: block; }
+        .config-table { width: 100%; border-collapse: collapse; color: #ccc; font-size: 0.9rem; }
+        .config-table th { text-align: left; padding: 15px; background: #111; border-bottom: 2px solid var(--neon-red); color: var(--neon-red); }
+        .config-table td { padding: 12px 15px; border-bottom: 1px solid #222; }
+        .btn-edit-config { background: var(--neon-red); color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; }
 
-        .ttg-card:hover { transform: translateY(-8px) scale(1.02); }
-
-        .ttg-card__title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid rgba(153, 0, 0, 0.2);
-            color: var(--text-light);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            position: relative;
-        }
-
-        /* Style Tampilan Result Single (Prize 1 Saja) */
-        .result-display {
-            font-family: 'Courier New', monospace;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--red-accent);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 5px 15px;
-            border-radius: 6px;
-            border: 1px dashed var(--red-primary);
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px var(--red-primary);
-            margin-top: 5px;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        /* Style Tampilan Result Multi (3 Prize) */
-        .result-display.multi {
-            flex-direction: column;
-            font-size: 0.95rem;
-            gap: 4px;
-            padding: 8px 10px;
-            width: 100%;
-        }
-
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding: 2px 5px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .result-row:last-child { border-bottom: none; }
-        .result-label { color: #888; font-weight: normal; font-size: 0.8rem; }
-        .result-val { color: var(--red-accent); font-weight: bold; letter-spacing: 2px; }
-
-        .countdown-timer {
-            font-size: 1rem;
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            padding: 4px 10px;
-            border-radius: 4px;
-            margin-top: 5px;
-            transition: all 0.3s ease;
-            width: 100%;
-            text-align: center;
-        }
-
-        .countdown-timer.phase-countdown {
-            color: var(--red-accent);
-            border: 1px solid rgba(255, 68, 68, 0.3);
-            background: rgba(153, 0, 0, 0.15);
-        }
-
-        .countdown-timer.phase-betclose {
-            color: #aaa;
-            border-color: #555;
-            background: #333;
-            font-size: 1.1rem;
-        }
-
-        .countdown-timer.warning {
-            color: #ffa500;
-            animation: pulse 1s infinite;
-            border-color: rgba(255, 165, 0, 0.5);
-            background: rgba(255, 165, 0, 0.1);
-        }
-
-        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.05); } }
-
-        .ttg-card__body { flex: 1; }
-
-        .ttg-card__row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .ttg-card__label {
-            display: flex;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .ttg-card__label svg { width: 18px; height: 18px; margin-right: 8px; color: var(--red-primary); }
-
-        .ttg-card__value { font-weight: 500; color: var(--text-light); }
-        .ttg-card__value--tutup { color: #ff6b6b; }
-        .ttg-card__value--buka { color: #51cf66; }
-
-        .ttg-card__footer {
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-website { background: var(--red-gradient); color: var(--bg-dark); flex: 1; }
-        .btn-input-result { background: transparent; border: 1px solid var(--red-light); color: var(--red-light); flex: 1; }
-        .btn-input-result:hover { background: var(--red-light); color: white; }
-
-        /* Modal Styles */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--modal-overlay);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            backdrop-filter: blur(5px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px); z-index: 1000; display: none; justify-content: center; align-items: center;
         }
-
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
-
-        .modal-box {
-            background: var(--bg-card);
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid var(--red-primary);
-            box-shadow: 0 0 30px rgba(153, 0, 0, 0.5);
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .modal-title {
-            font-size: 1.5rem;
-            color: var(--red-light);
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .modal-body {
-            color: var(--text-light);
-            margin-bottom: 25px;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .modal-input {
-            width: 100%;
-            padding: 10px;
-            background: #111;
-            border: 1px solid #444;
-            color: white;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            text-align: center;
-            letter-spacing: 3px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .modal-input:focus {
-            outline: none;
-            border-color: var(--red-light);
-            box-shadow: 0 0 10px rgba(204, 51, 51, 0.3);
-        }
-
-        .modal-actions { display: flex; gap: 10px; justify-content: center; }
-        .btn-modal { padding: 10px 25px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: transform 0.2s; }
-        .btn-modal:hover { transform: scale(1.05); }
-        .btn-primary { background: var(--red-primary); color: white; }
-        .btn-secondary { background: #444; color: white; }
-
-        /* Snowflake */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            z-index: 9999;
-            color: #fff;
-            font-size: 1em;
-            pointer-events: none;
-            user-select: none;
-            animation-name: fall;
-            animation-timing-function: linear;
-        }
-        @keyframes fall { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: #111; border: 1px solid #333; border-radius: 16px; width: 100%; max-width: 450px; padding: 30px; position: relative; text-align: center; }
+        .modal-input { width: 100%; background: #000; border: 1px solid #333; color: var(--gold-accent); padding: 12px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 1.1rem; text-align: center; letter-spacing: 2px; }
+        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-modal { flex: 1; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; text-transform: uppercase; }
+        .btn-save { background: var(--neon-red); color: #fff; }
+        .btn-cancel { background: #222; color: #fff; }
 
         @media (max-width: 768px) {
-            .header h1 { font-size: 2rem; }
-            .datetime-container { gap: 15px; flex-direction: column; }
+            .sidebar { display: none; }
+            .main-container { margin-left: 0; width: 100%; }
             .ttg-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>JADWAL TOGEL</h1>
-    
-    <!-- Toggle Sound -->
-    <button id="soundToggle" class="sound-control">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-        </svg>
-        <span id="soundText">Sound: OFF</span>
-    </button>
+    <div id="introOverlay">
+        <div class="intro-content">
+            <div class="intro-logo">Jadwal Togel TVTOTO</div>
+            <p style="color: #888; margin-bottom: 30px; font-family: var(--font-body);">ULTIMATE EDITION</p>
+            <button class="btn-enter" onclick="enterSite()">ENTER SITE</button>
+        </div>
+    </div>
 
-    <div class="datetime-container">
-        <div class="date-box">
-            <div class="date-label">Tanggal</div>
-            <div class="date-value">
-                <svg class="date-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                <span id="dateDisplay"></span>
+    <div class="sidebar">
+        <div class="nav-btn active" onclick="switchView('dashboard', this)">📊</div>
+        <div class="nav-btn" onclick="switchView('settings', this)">⚙️</div>
+    </div>
+
+    <div class="main-container">
+        <div id="view-dashboard" class="settings-view active">
+            <div class="header">
+                <h1>Jadwal Togel</h1>
+            </div>
+            <div class="top-bar">
+                <div class="clock-container">
+                    <div class="clock-time" id="timeDisplay">00:00:00</div>
+                </div>
+                <div class="sound-badge active" id="soundToggle"><span>Sound: ON</span></div>
+            </div>
+            <div class="search-wrapper">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search Market..." />
+            </div>
+            <div id="jadwal-kartu" class="ttg-grid"></div>
+        </div>
+
+        <div id="view-settings" class="settings-view">
+            <div class="header"><h1>Pengaturan Pasaran</h1></div>
+            <div style="margin-bottom: 20px; display:flex; justify-content:space-between;">
+                <p style="color: #888;">Edit Jam, Link, dan Tipe Prize.</p>
+                <button class="btn-web" style="width:auto; padding:5px 15px;" onclick="resetConfig()">Reset Default</button>
+            </div>
+            <div style="overflow-x: auto; background: #111; border-radius: 10px; border: 1px solid #333; padding: 10px;">
+                <table class="config-table">
+                    <thead><tr><th>Pasaran</th><th>Tutup</th><th>Buka</th><th>Aksi</th></tr></thead>
+                    <tbody id="settingsTableBody"></tbody>
+                </table>
             </div>
         </div>
-        <div class="time-box">
-            <div class="time-label">Waktu</div>
-            <div class="time-value">
-                <svg class="time-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                <span id="timeDisplay"></span>
-                <span class="wib-badge">WIB</span>
+    </div>
+
+    <div id="resultModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="color:white; margin-bottom:10px; font-family:var(--font-head)">Input Result</h3>
+            <div id="resModalMarket" style="color:var(--gold-accent); margin-bottom:15px;"></div>
+            <div id="inputContainer"></div>
+            <div class="modal-btns">
+                <button class="btn-modal btn-cancel" onclick="closeResultModal()">Batal</button>
+                <button class="btn-modal btn-save" onclick="saveResult()">Simpan</button>
             </div>
         </div>
     </div>
-</div>
 
-<div class="search-container">
-    <div class="search-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-    </div>
-    <input type="text" id="searchInput" class="search-box" placeholder="Cari nama pasaran togel..." />
-    <div id="searchResults" class="search-results"></div>
-</div>
-
-<div id="jadwal-kartu" class="ttg-grid"></div>
-
-<!-- MODAL ALERT: BET CLOSE -->
-<div id="alertModal" class="modal-overlay">
-    <div class="modal-box">
-        <div class="modal-title" style="color: #ff4444;">⚠️ BET CLOSE</div>
-        <div class="modal-body">
-            Pasaran <strong id="alertMarketName" style="color: white; font-size: 1.2rem;"></strong> <br>
-            Sudah memasuki masa penutupan.
-        </div>
-        <div class="modal-actions">
-            <button class="btn-modal btn-primary" onclick="closeAlertModal()">OK, Mengerti</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL INPUT RESULT (Dinamis 1 atau 3 Input) -->
-<div id="resultModal" class="modal-overlay">
-    <div class="modal-box">
-        <div class="modal-title">Input Result</div>
-        <div class="modal-body" style="text-align: left;">
-            Pasaran: <span id="resultMarketName" style="color: var(--red-light); font-weight: bold;"></span>
-            <div id="resultInputsContainer" style="margin-top: 15px;">
-                <!-- Input fields will be injected here via JS -->
+    <div id="configModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="color:var(--neon-red); margin-bottom:10px; font-family:var(--font-head)">Edit Pasaran</h3>
+            <div id="configMarketName" style="color:white; margin-bottom:15px;"></div>
+            <input type="hidden" id="configIndex">
+            <div style="margin-bottom:10px; text-align:left;"><label style="color:#888; font-size:0.8rem;">Nama</label><input type="text" id="cfgName" class="modal-input" style="text-align:left;"></div>
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;"><label style="color:#888; font-size:0.8rem;">Tutup</label><input type="time" id="cfgTutup" class="modal-input" style="font-family:var(--font-body); text-align:left;"></div>
+                <div style="flex:1;"><label style="color:#888; font-size:0.8rem;">Buka</label><input type="time" id="cfgBuka" class="modal-input" style="font-family:var(--font-body); text-align:left;"></div>
+            </div>
+            <div style="margin-bottom:10px; text-align:left;"><label style="color:#888; font-size:0.8rem;">Web</label><input type="text" id="cfgWeb" class="modal-input" style="text-align:left;"></div>
+            <div style="margin-bottom:10px; text-align:left;"><label style="color:#888; font-size:0.8rem;">Live</label><input type="text" id="cfgLive" class="modal-input" style="text-align:left;"></div>
+            <div style="margin-bottom:10px; text-align:left;"><label style="color:#888; font-size:0.8rem;">Prize</label>
+                <select id="cfgPrize" class="modal-input" style="text-align:left;"><option value="1">1 Prize</option><option value="3">3 Prize</option></select>
+            </div>
+            <div class="modal-btns">
+                <button class="btn-modal btn-cancel" onclick="closeConfigModal()">Batal</button>
+                <button class="btn-modal btn-save" onclick="saveConfigChanges()">Simpan</button>
             </div>
         </div>
-        <div class="modal-actions">
-            <button class="btn-modal btn-secondary" onclick="closeResultModal()">Batal</button>
-            <button class="btn-modal btn-primary" onclick="saveResult()">Simpan</button>
-        </div>
     </div>
-</div>
 
-<script>
-    // --- DATA & STATE ---
-    const pasaranData = [
-        // CATATAN: prizeCount: 3 artinya ada 3 prize (P1, P2, P3)
-        // Jika tidak ada properti prizeCount, defaultnya adalah 1 prize.
-        
-        {name: "HOKIDRAW", days: "Senin s/d Minggu", tutup: "23:59 WIB", buka: "00:00 WIB", website: "https://hokidraw.com/", live: "https://dlive.tv/u/HOKIDRAW", note: "RESULT 24X - 1 JAM SEKALI"},
-        {name: "TOTO MACAU PAGI", days: "Senin s/d Minggu", tutup: "00:00 WIB", buka: "00:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
-        {name: "HUAHIN 0100", days: "Senin s/d Minggu", tutup: "00:45 WIB", buka: "01:00 WIB", website: "https://huahinlottery.com/", live: "https://www.youtube.com/@huahinlottery5727"},
-        {name: "KENTUCKY MIDDAY", days: "Senin s/d Minggu", tutup: "01:05 WIB", buka: "01:20 WIB", website: "https://www.kylottery.com/apps/", live: null},
-        {name: "BANGKOK 0130", days: "Senin s/d Minggu", tutup: "01:15 WIB", buka: "01:30 WIB", website: "https://bangkokpoolstoday.com/", live: null},
-        {name: "FLORIDA MIDDAY", days: "Senin s/d Minggu", tutup: "01:20 WIB", buka: "01:30 WIB", website: "https://floridalottery.com/", live: "https://www.youtube.com/user/floridalottery"},
-        {name: "NEWYORK MIDDAY", days: "Senin s/d Minggu", tutup: "02:15 WIB", buka: "02:25 WIB", website: "https://nylottery.ny.gov/", live: "https://www.youtube.com/@NewYorkLottery/streams"},
-        {name: "BRUNEI 02", days: "Senin s/d Minggu", tutup: "02:30 WIB", buka: "02:45 WIB", website: "https://bruneipools.com/", live: null},
-        {name: "CAROLINA DAY", days: "Senin s/d Minggu", tutup: "02:45 WIB", buka: "03:00 WIB", website: "https://www.wral.com/entertainment/lottery/", live: null},
-        {name: "OREGON 03", days: "Senin s/d Minggu", tutup: "03:50 WIB", buka: "04:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
-        {name: "OREGON 06", days: "Senin s/d Minggu", tutup: "06:50 WIB", buka: "07:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
-        {name: "BANGKOK 0930", days: "Senin s/d Minggu", tutup: "09:15 WIB", buka: "09:30 WIB", website: "https://bangkokpoolstoday.com/", live: null},
-        {name: "CALIFORNIA", days: "Senin s/d Minggu", tutup: "09:25 WIB", buka: "09:30 WIB", website: "https://www.calottery.com/draw-games/daily-4", live: null},
-        {name: "FLORIDA EVENING", days: "Senin s/d Minggu", tutup: "09:35 WIB", buka: "09:45 WIB", website: "https://floridalottery.com/games/draw-games/pick-4", live: "https://www.youtube.com/user/floridalottery"},
-        {name: "OREGON 09", days: "Senin s/d Minggu", tutup: "09:50 WIB", buka: "10:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
-        {name: "NEWYORK EVENING", days: "Senin s/d Minggu", tutup: "10:25 WIB", buka: "10:35 WIB", website: "https://nylottery.ny.gov/", live: "https://www.youtube.com/@NewYorkLottery/streams"},
-        {name: "KENTUCKY EVENING", days: "Senin s/d Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", website: "https://www.kylottery.com/apps/", live: null},
-        
-        // CONTOH PASARAN 3 PRIZE:
-        {name: "TOTOCAMBODIA", days: "Senin s/d Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", website: "https://totocambodialive.com/", live: "https://kick.com/totocambodia", prizeCount: 3},
-        
-        {name: "CHELSEA 11", days: "Senin s/d Minggu", tutup: "11:00 WIB", buka: "11:15 WIB", website: "https://chelseapools.co.uk/", live: null},
-        {name: "CAROLINA EVENING", days: "Senin s/d Minggu", tutup: "11:17 WIB", buka: "11:22 WIB", website: "https://www.wral.com/entertainment/lottery/", live: null},
-        {name: "BULLSEYE", days: "Senin s/d Minggu", tutup: "12:00 WIB", buka: "12:15 WIB", website: "https://mylotto.co.nz/results/bullseye", live: null, prizeCount: 3},
-        {name: "POIPET 12", days: "Senin s/d Minggu", tutup: "12:15 WIB", buka: "12:30 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
-        {name: "OREGON 12", days: "Senin s/d Minggu", tutup: "12:50 WIB", buka: "13:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
-        {name: "TOTOMACAU SIANG", days: "Senin s/d Minggu", tutup: "13:00 WIB", buka: "13:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
-        
-        // CONTOH PASARAN 3 PRIZE:
-        {name: "SYDNEY", days: "Senin s/d Minggu", tutup: "13:49 WIB", buka: "14:05 WIB", website: "https://sydneyfunlotto.net/", live: "https://kick.com/sydney-lotto-official", prizeCount: 3},
-        
-        {name: "BRUNEI 14", days: "Senin s/d Minggu", tutup: "14:30 WIB", buka: "14:45 WIB", website: "https://bruneipools.com/", live: null},
-        {name: "CHELSEA 15", days: "Senin s/d Minggu", tutup: "15:00 WIB", buka: "15:15 WIB", website: "https://chelseapools.co.uk/", live: null},
-        {name: "TOTOMALI 1530", days: "Senin s/d Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", website: "https://totomali.com/", live: "https://www.youtube.com/@TotoMaliLive"},
-        {name: "POIPET 15", days: "Senin s/d Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
-        {name: "TOTOMACAU SORE", days: "Senin s/d Minggu", tutup: "16:00 WIB", buka: "16:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
-        {name: "HUAHIN 1630", days: "Senin s/d Minggu", tutup: "16:15 WIB", buka: "16:30 WIB", website: "https://huahinlottery.com/", live: "https://www.youtube.com/@huahinlottery5727"},
-        {name: "KING KONG4D SORE", days: "Senin s/d Minggu", tutup: "17:00 WIB", buka: "17:15 WIB", website: "https://kingkongpools.id/", live: "https://kick.com/king-kong-pools"},
-        
-        // CONTOH PASARAN 3 PRIZE:
-        {name: "SINGAPORE", days: "HARI SELASA & JUM'AT ( LIBUR )", tutup: "17:30 WIB", buka: "17:45 WIB", website: "https://www.singaporepools.com.sg/landing/en/Pages/index.html", live: null, activeDays: [1, 3, 4, 6, 0], prizeCount: 3},
-        
-        {name: "MAGNUM4D", days: "HARI RABU, SABTU & MINGGU", tutup: "18:10 WIB", buka: "18:40 WIB", website: "https://www.magnum4d.my/en", live: null, activeDays: [3, 6, 0]},
-        {name: "TOTOMACAU MALAM I", days: "Senin s/d Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
-        {name: "CHELSEA 19", days: "Senin s/d Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", website: "https://chelseapools.co.uk/", live: null},
-        {name: "POIPET 19", days: "Senin s/d Minggu", tutup: "19:30 WIB", buka: "19:45 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
-        {name: "PCSO", days: "Minggu Libur", tutup: "19:50 WIB", buka: "20:10 WIB", website: "https://www.pcso.gov.ph/", live: "https://www.youtube.com/@PCSOGOVPHOfficial/streams", activeDays: [1, 2, 3, 4, 5, 6]},
-        {name: "TOTOMALI 2030", days: "Senin s/d Minggu", tutup: "20:15 WIB", buka: "20:30 WIB", website: "https://totomali.com/", live: "https://www.youtube.com/@TotoMaliLive"},
-        {name: "HUAHIN 2100", days: "Senin s/d Minggu", tutup: "20:45 WIB", buka: "21:00 WIB", website: "https://huahinlottery.com/", live: "https://www.youtube.com/@huahinlottery5727"},
-        {name: "CHELSEA 21", days: "Senin s/d Minggu", tutup: "21:00 WIB", buka: "21:15 WIB", website: "https://chelseapools.co.uk/", live: null},
-        {name: "NEVADA", days: "Senin s/d Minggu", tutup: "21:15 WIB", buka: "21:30 WIB", website: "https://www.nevadalottery.us/", live: null},
-        {name: "BRUNEI 21", days: "Senin s/d Minggu", tutup: "21:30 WIB", buka: "21:45 WIB", website: "https://bruneipools.com/", live: null},
-        {name: "TOTOMACAU MALAM II", days: "Senin s/d Minggu", tutup: "22:00 WIB", buka: "22:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
-        {name: "POIPET 22", days: "Senin s/d Minggu", tutup: "22:30 WIB", buka: "22:45 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
-        
-        // CONTOH PASARAN 3 PRIZE:
-        {name: "HONGKONG", days: "Senin s/d Minggu", tutup: "22:59 WIB", buka: "23:15 WIB", website: "https://hongkongfunlotto.net/", live: "https://kick.com/hongkong-lotto-official", prizeCount: 3},
-        
-        {name: "TOTOMACAU MALAM III", days: "Senin s/d Minggu", tutup: "23:00 WIB", buka: "23:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
-        {name: "TOTOMALI 2330", days: "Senin s/d Minggu", tutup: "23:15 WIB", buka: "23:30 WIB", website: "https://totomali.com/", live: "https://www.youtube.com/@TotoMaliLive"},
-        {name: "KING KONG4D MALAM", days: "Senin s/d Minggu", tutup: "23:30 WIB", buka: "23:45 WIB", website: "https://kingkongpools.id/", live: "https://kick.com/king-kong-pools"}
-    ];
+    <script>
+        const defaultData = [
+            {name: "HOKIDRAW", days: "Result 1 Jam Sekali", tutup: "00:00 WIB", buka: "00:00 WIB", website: "https://hokidraw.com/", live: "https://dlive.tv/u/HOKIDRAW", prizeCount: 1},
+            {name: "TOTO MACAU PAGI", days: "Senin s/d Minggu", tutup: "00:00 WIB", buka: "00:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+            {name: "HUAHIN 0100", days: "Senin s/d Minggu", tutup: "00:45 WIB", buka: "01:00 WIB", website: "https://huahinlottery.com/", live: null},
+            {name: "KENTUCKY MIDDAY", days: "Senin s/d Minggu", tutup: "01:05 WIB", buka: "01:20 WIB", website: "https://www.kylottery.com/apps/", live: null},
+            {name: "BANGKOK 0130", days: "Senin s/d Minggu", tutup: "01:15 WIB", buka: "01:30 WIB", website: "https://bangkokpoolstoday.com/", live: null},
+            {name: "FLORIDA MIDDAY", days: "Senin s/d Minggu", tutup: "01:20 WIB", buka: "01:30 WIB", website: "https://floridalottery.com/", live: null},
+            {name: "NEWYORK MIDDAY", days: "Senin s/d Minggu", tutup: "02:15 WIB", buka: "02:25 WIB", website: "https://nylottery.ny.gov/", live: null},
+            {name: "BRUNEI 02", days: "Senin s/d Minggu", tutup: "02:30 WIB", buka: "02:45 WIB", website: "https://bruneipools.com/", live: null},
+            {name: "CAROLINA DAY", days: "Senin s/d Minggu", tutup: "02:45 WIB", buka: "03:00 WIB", website: "https://www.wral.com/entertainment/lottery/", live: null},
+            {name: "OREGON 03", days: "Senin s/d Minggu", tutup: "03:50 WIB", buka: "04:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+            {name: "OREGON 06", days: "Senin s/d Minggu", tutup: "06:50 WIB", buka: "07:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+            {name: "BANGKOK 0930", days: "Senin s/d Minggu", tutup: "09:15 WIB", buka: "09:30 WIB", website: "https://bangkokpoolstoday.com/", live: null},
+            {name: "CALIFORNIA", days: "Senin s/d Minggu", tutup: "09:25 WIB", buka: "09:30 WIB", website: "https://www.calottery.com/draw-games/daily-4", live: null},
+            {name: "FLORIDA EVENING", days: "Senin s/d Minggu", tutup: "09:35 WIB", buka: "09:45 WIB", website: "https://floridalottery.com/games/draw-games/pick-4", live: null},
+            {name: "OREGON 09", days: "Senin s/d Minggu", tutup: "09:50 WIB", buka: "10:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+            {name: "NEWYORK EVENING", days: "Senin s/d Minggu", tutup: "10:25 WIB", buka: "10:35 WIB", website: "https://nylottery.ny.gov/", live: null},
+            {name: "KENTUCKY EVENING", days: "Senin s/d Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", website: "https://www.kylottery.com/apps/", live: null},
+            {name: "TOTOCAMBODIA", days: "Senin s/d Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", website: "https://totocambodialive.com/", live: "https://kick.com/totocambodia", prizeCount: 3},
+            {name: "CHELSEA 11", days: "Senin s/d Minggu", tutup: "11:00 WIB", buka: "11:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+            {name: "CAROLINA EVENING", days: "Senin s/d Minggu", tutup: "11:17 WIB", buka: "11:22 WIB", website: "https://www.wral.com/entertainment/lottery/", live: null},
+            {name: "BULLSEYE", days: "Senin s/d Minggu", tutup: "12:00 WIB", buka: "12:15 WIB", website: "https://mylotto.co.nz/results/bullseye", live: null, prizeCount: 3},
+            {name: "POIPET 12", days: "Senin s/d Minggu", tutup: "12:15 WIB", buka: "12:30 WIB", website: "https://poipetlottery.com/", live: null},
+            {name: "OREGON 12", days: "Senin s/d Minggu", tutup: "12:50 WIB", buka: "13:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+            {name: "TOTOMACAU SIANG", days: "Senin s/d Minggu", tutup: "13:00 WIB", buka: "13:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+            {name: "SYDNEY", days: "Senin s/d Minggu", tutup: "13:49 WIB", buka: "14:05 WIB", website: "https://sydneyfunlotto.net/", live: "https://kick.com/sydney-lotto-official", prizeCount: 3},
+            {name: "BRUNEI 14", days: "Senin s/d Minggu", tutup: "14:30 WIB", buka: "14:45 WIB", website: "https://bruneipools.com/", live: null},
+            {name: "CHELSEA 15", days: "Senin s/d Minggu", tutup: "15:00 WIB", buka: "15:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+            {name: "TOTOMALI 1530", days: "Senin s/d Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", website: "https://totomali.com/", live: null},
+            {name: "POIPET 15", days: "Senin s/d Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", website: "https://poipetlottery.com/", live: null},
+            {name: "TOTOMACAU SORE", days: "Senin s/d Minggu", tutup: "16:00 WIB", buka: "16:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+            {name: "HUAHIN 1630", days: "Senin s/d Minggu", tutup: "16:15 WIB", buka: "16:30 WIB", website: "https://huahinlottery.com/", live: null},
+            {name: "KING KONG4D SORE", days: "Senin s/d Minggu", tutup: "17:00 WIB", buka: "17:15 WIB", website: "https://kingkongpools.id/", live: "https://kick.com/king-kong-pools"},
+            {name: "SINGAPORE", days: "HARI SELASA & JUM'AT ( LIBUR )", tutup: "17:30 WIB", buka: "17:45 WIB", website: "https://www.singaporepools.com.sg/", live: null, activeDays: [1, 3, 4, 6, 0], prizeCount: 3},
+            {name: "MAGNUM4D", days: "HARI RABU, SABTU & MINGGU", tutup: "18:10 WIB", buka: "18:40 WIB", website: "https://www.magnum4d.my/en", live: null, activeDays: [3, 6, 0]},
+            {name: "TOTOMACAU MALAM I", days: "Senin s/d Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+            {name: "CHELSEA 19", days: "Senin s/d Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+            {name: "POIPET 19", days: "Senin s/d Minggu", tutup: "19:30 WIB", buka: "19:45 WIB", website: "https://poipetlottery.com/", live: null},
+            {name: "PCSO", days: "Minggu Libur", tutup: "19:50 WIB", buka: "20:10 WIB", website: "https://www.pcso.gov.ph/", live: null, activeDays: [1, 2, 3, 4, 5, 6]},
+            {name: "TOTOMALI 2030", days: "Senin s/d Minggu", tutup: "20:15 WIB", buka: "20:30 WIB", website: "https://totomali.com/", live: null},
+            {name: "HUAHIN 2100", days: "Senin s/d Minggu", tutup: "20:45 WIB", buka: "21:00 WIB", website: "https://huahinlottery.com/", live: null},
+            {name: "CHELSEA 21", days: "Senin s/d Minggu", tutup: "21:00 WIB", buka: "21:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+            {name: "NEVADA", days: "Senin s/d Minggu", tutup: "21:15 WIB", buka: "21:30 WIB", website: "https://www.nevadalottery.us/", live: null},
+            {name: "BRUNEI 21", days: "Senin s/d Minggu", tutup: "21:30 WIB", buka: "21:45 WIB", website: "https://bruneipools.com/", live: null},
+            {name: "TOTOMACAU MALAM II", days: "Senin s/d Minggu", tutup: "22:00 WIB", buka: "22:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+            {name: "POIPET 22", days: "Senin s/d Minggu", tutup: "22:30 WIB", buka: "22:45 WIB", website: "https://poipetlottery.com/", live: null},
+            {name: "HONGKONG", days: "Senin s/d Minggu", tutup: "22:59 WIB", buka: "23:15 WIB", website: "https://hongkongfunlotto.net/", live: "https://kick.com/hongkong-lotto-official", prizeCount: 3},
+            {name: "TOTOMACAU MALAM III", days: "Senin s/d Minggu", tutup: "23:00 WIB", buka: "23:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+            {name: "TOTOMALI 2330", days: "Senin s/d Minggu", tutup: "23:15 WIB", buka: "23:30 WIB", website: "https://totomali.com/", live: null},
+            {name: "KING KONG4D MALAM", days: "Senin s/d Minggu", tutup: "23:30 WIB", buka: "23:45 WIB", website: "https://kingkongpools.id/", live: "https://kick.com/king-kong-pools"}
+        ];
 
-    let alertStates = {};
-    let soundEnabled = false;
-    let currentEditingMarket = null;
-    let savedResults = JSON.parse(localStorage.getItem('togelResults')) || {};
+        let pasaranData = [];
+        let savedResults = JSON.parse(localStorage.getItem('tvtoto_results')) || {};
+        let alertStates = {};
+        let soundEnabled = true;
+        let audioCtx = null;
+        let currentEditingMarket = null;
 
-    // --- AUDIO & SPEECH ENGINE ---
-    let audioCtx = null;
+        /* --- CARA KERJA SCRIPT (EXPLANATION) --- */
+        /*
+        1.  PENGATURAN DATA (defaultData):
+            Script ini punya 'Gudang Data' bawaan (variable defaultData).
+            Saat pertama kali dibuka, script menyalin data ini ke LocalStorage (Penyimpanan Browser).
+            Jadi data tidak hilang kalau di-refresh.
+        
+        2.  LOGIKA JAM (calculateTimer):
+            Setiap 1 detik, script mengejam jam komputer/laptop Anda (new Date).
+            Lalu script bandingkan dengan jam tutup di data pasaran.
+            
+            - Jika jam Sekarang < Jam Tutup: Maka STATUS OPEN.
+            - Jika jam Sekarang >= Jam Tutup AND < Jam Buka: Maka STATUS BET CLOSE.
+            - Jika jam Sekarang >= Jam Buka: Hitung mundur ke tutup besok.
+        
+        3.  KASUS KHUSUS HOKIDRAW:
+            Karena HOKIDRAW result per jam, script memakai logika khusus:
+            - Jika menit 00 - 04: STATUS BET CLOSE.
+            - Jika menit 05 - 59: STATUS OPEN (Hitung mundur ke menit 00 jam berikutnya).
+        
+        4.  ALARM (triggerAlert):
+            Script menyimpan status 'alertStates'.
+            Kalau status berubah dari OPEN ke CLOSE, script memanggil fungsi playAlert() (bunyi) dan speakText() (bicara).
+            Setelah bunyi sekali, status di-LOCK agar tidak bunyi berulang-ulang saat masih status CLOSE.
+        */
 
-    function initAudio() {
-        if (!audioCtx) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
+        function initData() {
+            const stored = localStorage.getItem('tvtoto_config_v3');
+            if (stored) pasaranData = JSON.parse(stored);
+            else { pasaranData = JSON.parse(JSON.stringify(defaultData)); localStorage.setItem('tvtoto_config_v3', JSON.stringify(pasaranData)); }
         }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-        if ('speechSynthesis' in window) {
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             window.speechSynthesis.getVoices();
         }
-    }
 
-    function playDing() {
-        if (!soundEnabled || !audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.5);
-    }
+        function playAlert() {
+            if (!soundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        }
 
-    function speakText(text) {
-        if (!soundEnabled) return;
-        if ('speechSynthesis' in window) {
+        function speak(text) {
+            if (!soundEnabled) return;
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            utterance.volume = 1;
-            const voices = window.speechSynthesis.getVoices();
-            const googleVoice = voices.find(v => v.name.includes('Google US English'));
-            if (googleVoice) utterance.voice = googleVoice;
-            window.speechSynthesis.speak(utterance);
+            const u = new SpeechSynthesisUtterance(text); u.lang = 'id-ID'; u.rate = 1.1;
+            window.speechSynthesis.speak(u);
         }
-    }
 
-    function triggerFullAlert(marketName) {
-        playDing();
-        setTimeout(() => {
-            speakText(`${marketName} Bet Close`);
-        }, 300);
-    }
-
-    // --- CORE FUNCTIONS ---
-
-    function updateDateTime() {
-        const now = new Date();
-        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        
-        const dayName = days[now.getDay()];
-        const date = now.getDate();
-        const month = months[now.getMonth()];
-        const year = now.getFullYear();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-        document.getElementById('dateDisplay').textContent = `${dayName}, ${date} ${month} ${year}`;
-        document.getElementById('timeDisplay').innerHTML = `${hours}<span class="time-separator">:</span>${minutes}<span class="time-separator">:</span>${seconds}`;
-    }
-
-    function parseTimeToMinutes(timeStr) {
-        const [time] = timeStr.split(' ');
-        const [hours, minutes] = time.split(':').map(Number);
-        return hours * 60 + minutes;
-    }
-
-    function isActiveDay(data) {
-        if (!data.activeDays) return true;
-        const now = new Date();
-        return data.activeDays.includes(now.getDay());
-    }
-
-    function getNextActiveDay(data) {
-        if (!data.activeDays) return null;
-        const now = new Date();
-        const currentDay = now.getDay();
-        const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        for (let i = 1; i <= 7; i++) {
-            const nextDay = (currentDay + i) % 7;
-            if (data.activeDays.includes(nextDay)) return dayNames[nextDay];
+        function triggerAlert(name) {
+            playAlert();
+            setTimeout(() => speak(`Perhatian, pasaran ${name} bet close`), 200);
         }
-        return null;
-    }
 
-    function getNextActiveDayDate(data) {
-        if (!data.activeDays) return null;
-        const now = new Date();
-        const currentDay = now.getDay();
-        for (let i = 1; i <= 7; i++) {
-            const nextDay = (currentDay + i) % 7;
-            if (data.activeDays.includes(nextDay)) {
-                return { daysToAdd: i, dayOfWeek: nextDay };
-            }
+        function parseTime(str) {
+            const [t] = str.split(' '); const [h, m] = t.split(':').map(Number);
+            return h * 60 + m;
         }
-        return null;
-    }
 
-    function calculateCountdown(tutupTime, bukaTime, data) {
-        const now = new Date();
-        const currentDay = now.getDay();
-        
-        if (!isActiveDay(data)) {
-            return { isHoliday: true, nextActiveDay: getNextActiveDay(data) };
+        function isActiveDay(data) {
+            if (!data.activeDays) return true;
+            return data.activeDays.includes(new Date().getDay());
         }
-        
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-        const tutupMinutes = parseTimeToMinutes(tutupTime);
-        const bukaMinutes = parseTimeToMinutes(bukaTime);
-        
-        let diff;
-        let phase;
-        
-        if (currentMinutes < tutupMinutes) {
-            diff = tutupMinutes - currentMinutes;
-            phase = 'countdown';
-        }
-        else if (currentMinutes >= tutupMinutes && currentMinutes < bukaMinutes) {
-            return { isBetClose: true, isHoliday: false };
-        }
-        else {
-            const tomorrow = (currentDay + 1) % 7;
-            const isTomorrowActive = !data.activeDays || data.activeDays.includes(tomorrow);
-            if (isTomorrowActive) {
-                diff = (24 * 60) - currentMinutes + tutupMinutes;
-            } else {
-                const nextActive = getNextActiveDayDate(data);
-                if (nextActive) {
-                    diff = (nextActive.daysToAdd * 24 * 60) - currentMinutes + tutupMinutes;
-                } else {
-                    diff = (24 * 60) - currentMinutes + tutupMinutes;
-                }
-            }
-            phase = 'countdown';
-        }
-        
-        const hours = Math.floor(diff / 60);
-        const minutes = diff % 60;
-        const seconds = 60 - now.getSeconds();
-        
-        return {
-            hours, minutes, seconds: seconds === 60 ? 0 : seconds,
-            totalMinutes: diff,
-            isHoliday: false, isBetClose: false, phase: phase
-        };
-    }
 
-    function formatCountdown(countdown) {
-        if (countdown.isHoliday) return `LIBUR - Next: ${countdown.nextActiveDay}`;
-        if (countdown.isBetClose) return 'BET CLOSE';
-        const h = String(countdown.hours).padStart(2, '0');
-        const m = String(countdown.minutes).padStart(2, '0');
-        const s = String(countdown.seconds).padStart(2, '0');
-        return `${h}:${m}:${s}`;
-    }
-
-    function showAlertModal(marketName) {
-        document.getElementById('alertMarketName').textContent = marketName;
-        document.getElementById('alertModal').classList.add('active');
-        triggerFullAlert(marketName);
-    }
-
-    function closeAlertModal() {
-        document.getElementById('alertModal').classList.remove('active');
-    }
-
-    function updateCountdowns() {
-        document.querySelectorAll('.countdown-timer').forEach((timer, index) => {
-            const data = pasaranData[index];
-            const countdown = calculateCountdown(data.tutup, data.buka, data);
-            timer.textContent = formatCountdown(countdown);
+        function calculateTimer(data) {
+            const now = new Date();
+            const curMin = now.getHours() * 60 + now.getMinutes();
             
-            timer.className = 'countdown-timer';
-            
-            if (alertStates[data.name] === undefined) alertStates[data.name] = false;
-
-            if (countdown.isHoliday) {
-                timer.classList.add('holiday');
-                alertStates[data.name] = false;
-            } else if (countdown.isBetClose) {
-                timer.classList.add('phase-betclose');
-                if (!alertStates[data.name]) {
-                    showAlertModal(data.name);
-                    alertStates[data.name] = true;
+            // HOKIDRAW LOGIC
+            if (data.name === "HOKIDRAW") {
+                const m = now.getMinutes();
+                const s = now.getSeconds();
+                if (m >= 0 && m < 5) return { status: 'CLOSE', text: 'RESULT TIME', isHourly: true };
+                else {
+                    const nextH = (now.getHours() + 1) % 24;
+                    const diff = (nextH * 60) - curMin;
+                    return { status: 'ACTIVE', h: Math.floor(diff/60), m: diff%60, s: 60-s, isHourly: true, nextH };
                 }
-            } else {
-                timer.classList.add('phase-countdown');
-                if (countdown.totalMinutes <= 30 && countdown.totalMinutes > 0) {
-                    timer.classList.add('warning');
-                }
-                alertStates[data.name] = false;
             }
-        });
-    }
 
-    // --- CARD & RESULT FUNCTIONS (UPDATED FOR 3 PRIZE) ---
-
-    function createCard(data, index) {
-        const card = document.createElement('div');
-        card.className = 'ttg-card';
-        card.setAttribute('data-title', data.name.toLowerCase());
-        
-        // Cek data result
-        let resultHtml = '';
-        let resultClass = 'result-display';
-
-        // Normalisasi data lama (string) ke data baru (object)
-        let marketResult = savedResults[data.name];
-        if (typeof marketResult === 'string') {
-            // Jika data lama masih string, anggap itu prize 1
-            marketResult = { p1: marketResult || "" };
-        } else if (!marketResult) {
-            marketResult = { p1: "", p2: "", p3: "" };
+            // NORMAL LOGIC
+            if (!isActiveDay(data)) return { status: 'LIBUR' };
+            const tutup = parseTime(data.tutup);
+            const buka = parseTime(data.buka);
+            
+            if (curMin < tutup) return { status: 'ACTIVE', h: Math.floor((tutup-curMin)/60), m: (tutup-curMin)%60, s: 60-now.getSeconds() };
+            if (curMin >= tutup && curMin < buka) return { status: 'CLOSE' };
+            const diff = (24*60) - curMin + tutup;
+            return { status: 'ACTIVE', h: Math.floor(diff/60), m: diff%60, s: 60-now.getSeconds() };
         }
 
-        // Jika pasaran punya 3 prize
-        if (data.prizeCount === 3) {
-            resultClass += ' multi';
-            resultHtml = `
-                <div class="result-row"><span class="result-label">PRIZE 1:</span><span class="result-val">${marketResult.p1}</span></div>
-                <div class="result-row"><span class="result-label">PRIZE 2:</span><span class="result-val">${marketResult.p2}</span></div>
-                <div class="result-row"><span class="result-label">PRIZE 3:</span><span class="result-val">${marketResult.p3}</span></div>
-            `;
-        } else {
-            // Pasaran 1 prize
-            resultHtml = marketResult.p1;
-        }
-
-        const liveLink = data.live ? `<a href="${data.live}" target="_blank" class="btn btn-input-result">Live</a>` : '';
-        
-        const iconClock = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
-        const iconCalendar = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
-        
-        card.innerHTML = `
-            <div class="ttg-card__title">
-                <span>${data.name}</span>
-                <div class="countdown-timer">00:00:00</div>
-                <div id="result-${index}" class="${resultClass}">
-                    ${resultHtml}
-                </div>
-            </div>
-            <div class="ttg-card__body">
-                <div class="ttg-card__row">
-                    <span class="ttg-card__label">${iconCalendar} Hari</span>
-                    <span class="ttg-card__value">${data.days}</span>
-                </div>
-                <div class="ttg-card__row">
-                    <span class="ttg-card__label">${iconClock} Tutup</span>
-                    <span class="ttg-card__value ttg-card__value--tutup">${data.tutup}</span>
-                </div>
-                <div class="ttg-card__row">
-                    <span class="ttg-card__label">${iconClock} Buka</span>
-                    <span class="ttg-card__value ttg-card__value--buka">${data.buka}</span>
-                </div>
-            </div>
-            <div class="ttg-card__footer">
-                <a href="${data.website}" target="_blank" class="btn btn-website">Website</a>
-                <button class="btn btn-input-result" onclick="openResultModal('${data.name}', ${index})">Input Result</button>
-                ${liveLink}
-            </div>
-        `;
-        return card;
-    }
-
-    function renderCards() {
-        const container = document.getElementById('jadwal-kartu');
-        container.innerHTML = '';
-        pasaranData.forEach((data, index) => {
-            container.appendChild(createCard(data, index));
-        });
-        updateCountdowns();
-    }
-
-    // --- MODAL DINAMIS ---
-
-    function openResultModal(marketName, index) {
-        currentEditingMarket = marketName;
-        document.getElementById('resultMarketName').textContent = marketName;
-        
-        const container = document.getElementById('resultInputsContainer');
-        container.innerHTML = ''; // Bersihkan input lama
-
-        const marketData = pasaranData.find(p => p.name === marketName);
-        const isMulti = (marketData && marketData.prizeCount === 3);
-
-        // Ambil data tersimpan
-        let saved = savedResults[marketName];
-        if (typeof saved === 'string') saved = { p1: saved || "", p2: "", p3: "" };
-        else if (!saved) saved = { p1: "", p2: "", p3: "" };
-
-        if (isMulti) {
-            // Buat 3 Input untuk 3 Prize
-            ['1', '2', '3'].forEach(num => {
-                const group = document.createElement('div');
-                group.className = 'input-group';
-                group.innerHTML = `
-                    <label class="input-label">Prize ${num}</label>
-                    <input type="number" id="input-p${num}" class="modal-input" value="${saved['p'+num]}" placeholder="0000" maxlength="4">
+        /* --- RENDERING FUNCTIONS --- */
+        function renderDashboard() {
+            const grid = document.getElementById('jadwal-kartu'); grid.innerHTML = '';
+            pasaranData.forEach((d, i) => {
+                const res = savedResults[d.name] || (d.prizeCount===3?{p1:'',p2:'',p3:''}:'');
+                let resHtml = d.prizeCount===3 
+                    ? `<div class="res-multi"><div>P1: <b>${res.p1||'--'}</b></div><div>P2: <b>${res.p2||'--'}</b></div><div>P3: <b>${res.p3||'--'}</b></div></div>`
+                    : `<div class="res-single">${res.p1||'----'}</div>`;
+                
+                const card = document.createElement('div'); card.className = 'ttg-card';
+                card.innerHTML = `
+                    <div class="card-header"><div class="market-name">${d.name}</div><div class="timer-box"><div class="timer-display" id="timer-${i}">--:--</div></div></div>
+                    <div class="result-area">${resHtml}</div>
+                    <div class="card-body"><div class="info-row"><span>Hari</span><b>${d.days}</b></div><div class="info-row"><span>Tutup</span><b style="color:var(--neon-red)">${d.tutup}</b></div><div class="info-row"><span>Buka</span><b style="color:#0f0">${d.buka}</b></div></div>
+                    <div class="card-footer">
+                        <button class="btn btn-input" onclick="openResultModal('${d.name}', ${i})">INPUT</button>
+                        <a href="${d.website}" target="_blank" class="btn btn-web">WEB</a>
+                        ${d.live ? `<a href="${d.live}" target="_blank" class="btn btn-web">LIVE</a>` : ''}
+                    </div>
                 `;
-                container.appendChild(group);
+                grid.appendChild(card);
             });
-        } else {
-            // Buat 1 Input
-            const group = document.createElement('div');
-            group.className = 'input-group';
-            group.innerHTML = `
-                <label class="input-label">Prize 1</label>
-                <input type="number" id="input-p1" class="modal-input" value="${saved.p1}" placeholder="0000" maxlength="4">
-            `;
-            container.appendChild(group);
         }
 
-        document.getElementById('resultModal').classList.add('active');
-        
-        // Focus input pertama
-        setTimeout(() => {
-            const firstInput = container.querySelector('.modal-input');
-            if(firstInput) firstInput.focus();
-        }, 100);
-    }
-
-    function closeResultModal() {
-        document.getElementById('resultModal').classList.remove('active');
-        currentEditingMarket = null;
-    }
-
-    function saveResult() {
-        if (!currentEditingMarket) return;
-        
-        const marketData = pasaranData.find(p => p.name === currentEditingMarket);
-        const isMulti = (marketData && marketData.prizeCount === 3);
-        
-        const newData = {
-            p1: document.getElementById('input-p1') ? document.getElementById('input-p1').value : "",
-            p2: "",
-            p3: ""
-        };
-
-        if (isMulti) {
-            newData.p2 = document.getElementById('input-p2') ? document.getElementById('input-p2').value : "";
-            newData.p3 = document.getElementById('input-p3') ? document.getElementById('input-p3').value : "";
-        }
-
-        // Simpan ke localStorage
-        savedResults[currentEditingMarket] = newData;
-        localStorage.setItem('togelResults', JSON.stringify(savedResults));
-
-        // Update UI Kartu (Render ulang bagian tertentu atau semua)
-        // Cara paling aman render ulang semua kartu yang terlihat atau update DOM langsung
-        const index = pasaranData.findIndex(p => p.name === currentEditingMarket);
-        if (index !== -1) {
-            // Kita buat ulang HTML untuk kartu ini agar formatnya benar (single vs multi)
-            const container = document.getElementById('jadwal-kartu');
-            const oldCard = container.children[index];
-            const newCard = createCard(marketData, index);
-            
-            // Animasi flash saat update
-            oldCard.replaceWith(newCard);
-            const displayEl = newCard.querySelector('.result-display');
-            displayEl.style.borderColor = "#fff";
-            displayEl.style.color = "#fff";
-            setTimeout(() => {
-                displayEl.style.borderColor = isMulti ? "rgba(255,255,255,0.05)" : "var(--red-primary)";
-                displayEl.style.color = "var(--red-accent)";
-                if(isMulti) {
-                    const vals = displayEl.querySelectorAll('.result-val');
-                    vals.forEach(v => v.style.color = "var(--red-accent)");
-                }
-            }, 500);
-        }
-
-        closeResultModal();
-    }
-
-    function createSnowflake() {
-        const snowflake = document.createElement("div");
-        snowflake.classList.add("snowflake");
-        snowflake.textContent = "❄";
-        snowflake.style.left = Math.random() * window.innerWidth + "px";
-        snowflake.style.fontSize = Math.random() * 15 + 10 + "px";
-        snowflake.style.animationDuration = Math.random() * 5 + 5 + "s";
-        snowflake.style.opacity = Math.random();
-        document.body.appendChild(snowflake);
-        setTimeout(() => snowflake.remove(), 10000);
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("searchInput");
-        const searchResults = document.getElementById("searchResults");
-        const soundToggle = document.getElementById('soundToggle');
-        const soundText = document.getElementById('soundText');
-
-        renderCards();
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-        setInterval(updateCountdowns, 1000);
-        setInterval(createSnowflake, 300);
-
-        searchInput.addEventListener("input", function () {
-            const searchTerm = this.value.toLowerCase().trim();
-            let visibleCount = 0;
+        function updateTimers() {
             const cards = document.querySelectorAll('.ttg-card');
+            cards.forEach((c, i) => {
+                const d = pasaranData[i];
+                const timer = c.querySelector('.timer-display');
+                const calc = calculateTimer(d);
+                timer.className = 'timer-display';
 
-            cards.forEach((card) => {
-                const title = card.getAttribute("data-title").toLowerCase();
-                if (title.includes(searchTerm)) {
-                    card.style.display = "flex";
-                    visibleCount++;
+                if (calc.status === 'LIBUR') timer.textContent = 'LIBUR';
+                else if (calc.status === 'CLOSE') {
+                    timer.textContent = calc.text || 'BET CLOSE';
+                    if (calc.isHourly) timer.classList.add('result-mode');
+                    if (!alertStates[d.name]) { triggerAlert(d.name); alertStates[d.name] = true; }
                 } else {
-                    card.style.display = "none";
+                    if (calc.isHourly) { timer.textContent = `CLOSE: ${String(calc.nextH).padStart(2,'0')}:00`; timer.classList.add('hourly-active'); }
+                    else { timer.textContent = `${String(calc.h).padStart(2,'0')}:${String(calc.m).padStart(2,'0')}:${String(calc.s).padStart(2,'0')}`; timer.classList.add('active'); }
+                    alertStates[d.name] = false;
                 }
             });
+        }
 
-            if (searchTerm.length > 0) {
-                searchResults.textContent = visibleCount === 0 
-                    ? `Tidak ditemukan hasil untuk "${searchTerm}"` 
-                    : `Ditemukan ${visibleCount} hasil untuk "${searchTerm}"`;
-            } else {
-                searchResults.textContent = "";
-            }
+        function initApp() {
+            renderDashboard(); renderSettings();
+            setInterval(() => { document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('id-ID', {hour12:false}); updateTimers(); }, 1000);
+        }
+
+        function enterSite() { initAudio(); initData(); document.getElementById('introOverlay').classList.add('hidden'); initApp(); }
+
+        function renderSettings() {
+            const tbody = document.getElementById('settingsTableBody'); tbody.innerHTML = '';
+            pasaranData.forEach((d, i) => tbody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.tutup}</td><td>${d.buka}</td><td><button class="btn-edit-config" onclick="openConfig(${i})">EDIT</button></td></tr>`);
+        }
+
+        function switchView(v, b) {
+            document.querySelectorAll('.settings-view').forEach(e=>e.classList.remove('active'));
+            document.getElementById('view-'+v).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active'));
+            b.classList.add('active');
+        }
+
+        function openConfig(i) {
+            const d = pasaranData[i];
+            document.getElementById('configIndex').value = i;
+            document.getElementById('configMarketName').textContent = d.name;
+            document.getElementById('cfgName').value = d.name;
+            document.getElementById('cfgTutup').value = d.tutup.split(' ')[0];
+            document.getElementById('cfgBuka').value = d.buka.split(' ')[0];
+            document.getElementById('cfgWeb').value = d.website;
+            document.getElementById('cfgLive').value = d.live || '';
+            document.getElementById('cfgPrize').value = d.prizeCount || 1;
+            document.getElementById('configModal').classList.add('active');
+        }
+
+        function saveConfigChanges() {
+            const i = document.getElementById('configIndex').value;
+            pasaranData[i].name = document.getElementById('cfgName').value;
+            pasaranData[i].tutup = document.getElementById('cfgTutup').value + " WIB";
+            pasaranData[i].buka = document.getElementById('cfgBuka').value + " WIB";
+            pasaranData[i].website = document.getElementById('cfgWeb').value;
+            pasaranData[i].live = document.getElementById('cfgLive').value;
+            pasaranData[i].prizeCount = parseInt(document.getElementById('cfgPrize').value);
+            localStorage.setItem('tvtoto_config_v3', JSON.stringify(pasaranData));
+            renderSettings(); renderDashboard(); closeConfigModal();
+        }
+        function closeConfigModal() { document.getElementById('configModal').classList.remove('active'); }
+        function resetConfig() { if(confirm("Reset?")) { localStorage.removeItem('tvtoto_config_v3'); pasaranData = JSON.parse(JSON.stringify(defaultData)); renderSettings(); renderDashboard(); } }
+
+        function openResultModal(n, i) {
+            currentEditingMarket = n;
+            document.getElementById('resModalMarket').textContent = n;
+            const c = document.getElementById('inputContainer'); c.innerHTML = '';
+            const d = pasaranData.find(x => x.name === n);
+            const saved = savedResults[n] || (d.prizeCount===3?{p1:'',p2:'',p3:''}:{p1:''});
+            if (d.prizeCount===3) [1,2,3].forEach(k => c.innerHTML += `<input type="number" id="inp-p${k}" class="modal-input" value="${saved['p'+k]}" placeholder="P${k}">`);
+            else c.innerHTML = `<input type="number" id="inp-p1" class="modal-input" value="${saved.p1}" placeholder="Result">`;
+            document.getElementById('resultModal').classList.add('active');
+        }
+        function closeResultModal() { document.getElementById('resultModal').classList.remove('active'); }
+        function saveResult() {
+            if(!currentEditingMarket) return;
+            const d = pasaranData.find(x => x.name === currentEditingMarket);
+            const res = { p1: document.getElementById('inp-p1').value, p2: '', p3: '' };
+            if(d.prizeCount===3) { res.p2 = document.getElementById('inp-p2').value; res.p3 = document.getElementById('inp-p3').value; }
+            savedResults[currentEditingMarket] = res;
+            localStorage.setItem('tvtoto_results', JSON.stringify(savedResults));
+            renderDashboard(); closeResultModal();
+        }
+
+        document.getElementById('soundToggle').onclick = function() {
+            soundEnabled = !soundEnabled; this.querySelector('span').textContent = soundEnabled ? 'Sound: ON' : 'Sound: OFF'; this.classList.toggle('active'); if(soundEnabled) initAudio();
+        };
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            document.querySelectorAll('.ttg-card').forEach(c => c.style.display = c.querySelector('.market-name').textContent.toLowerCase().includes(e.target.value.toLowerCase()) ? 'flex' : 'none');
         });
-
-        soundToggle.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            soundText.textContent = soundEnabled ? "Sound: ON" : "Sound: OFF";
-            soundToggle.style.borderColor = soundEnabled ? "var(--red-accent)" : "#444";
-            
-            if (soundEnabled) {
-                initAudio();
-                triggerFullAlert("Sound Test");
-            }
-        });
-    });
-</script>
-
+    </script>
 </body>
-</html>
+</html> 
