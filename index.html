@@ -1,928 +1,1087 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GPT-Class Pasaran Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg1:#0b0b0d; --bg2:#1a0e0e; --bg3:#3a0a0a;
-      --glass: rgba(255,255,255,.06);
-      --stroke: rgba(255,215,0,.22);
-      --gold:#FFD700; --amber:#FFB000; --text:#f6f6f9; --muted:#e9dfb8;
-      --green:#10b981; --greenSoft: rgba(16,185,129,.15);
-      --blue:#38bdf8; --blueSoft: rgba(56,189,248,.14);
-      --rose:#fb7185; --roseSoft: rgba(251,113,133,.14);
-      --shadow: 0 0 24px rgba(255,215,0,.25);
-      --cardRadius:16px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 20% -10%, var(--bg3), transparent),
-        radial-gradient(900px 600px at 120% 20%, var(--bg2), transparent),
-        linear-gradient(135deg, var(--bg1), #140909 30%, var(--bg2), var(--bg3));
-      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
-    header{
-      position:sticky; top:0; z-index:20; /* typo diperbaiki di sini */
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:18px 16px;
-      background:rgba(0,0,0,.78); backdrop-filter:saturate(140%) blur(6px);
-      box-shadow: inset 0 0 0 1px var(--stroke), var(--shadow);
-    }
-    .brand{
-      display:flex; gap:12px; align-items:center;
-      font-family:'Orbitron',sans-serif; letter-spacing:2.5px; font-weight:700;
-      text-shadow:0 0 10px var(--gold), 0 0 18px var(--amber);
-    }
-    .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--amber)}
-    .toolbar{
-      display:grid; gap:10px; grid-template-columns: 1fr;
-      width:min(1280px,95%); margin:14px auto 0;
-    }
-    @media(min-width:1100px){
-      .toolbar{grid-template-columns:1fr auto auto auto auto auto}
-    }
-    /* Hilangkan search input di sini */
-    /* #search{
-      padding:12px 14px; border-radius:12px; border:1.5px solid var(--stroke);
-      background:rgba(0,0,0,.55); color:var(--gold); font-size:15px; width:100%;
-      outline:none; text-align:center;
-      box-shadow:0 0 10px rgba(255,215,0,.18) inset, 0 0 12px rgba(255,215,0,.16);
-    } */
-    .bar{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
-    .pill{
-      background:var(--glass); border:1px solid var(--stroke); border-radius:999px; padding:8px 12px;
-      color:var(--gold); font-size:13px; cursor:pointer; transition:.25s;
-      text-shadow:0 0 6px var(--amber); box-shadow:0 0 10px rgba(255,215,0,.12);
-      user-select:none;
-    }
-    .pill:hover{ background:rgba(255,215,0,.12); box-shadow:0 0 18px rgba(255,215,0,.35); color:#2a0b0b }
-    .pill.active{ background:var(--gold); color:#2a0b0b; box-shadow:0 0 22px var(--amber), 0 0 44px var(--gold) }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Togel Pro - Multi Prize</title>
+    <style>
+        :root {
+            --red-primary: #990000;
+            --red-light: #cc3333;
+            --red-dark: #660000;
+            --red-gradient: linear-gradient(135deg, #008799, #cc3333, #ff4444, #660000);
+            --red-glow: 0 0 20px rgba(153, 0, 0, 0.5);
+            --red-accent: #ff4444;
+            --bg-dark: #1a1a1a;
+            --bg-card: #252525;
+            --text-light: #f8f8f8;
+            --text-secondary: #cccccc;
+            --shadow-red: 0 4px 15px rgba(153, 0, 0, 0.3);
+            --modal-overlay: rgba(0, 0, 0, 0.85);
+        }
 
-    .panel{
-      width:min(1280px,95%); margin:12px auto 0;
-      display:flex; flex-wrap:wrap; gap:12px; justify-content:center; font-size:.9rem; color:var(--muted)
-    }
-    .panel .sep{opacity:.5}
-    .panel .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
-    .dot-green{background:var(--green)}
-    .dot-gold{background:var(--gold)}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    .grid{
-      display:grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap:18px; padding:18px; width:min(1320px, 96%); margin:0 auto 60px;
-    }
-    .card{
-      position:relative; border-radius:var(--cardRadius);
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border:1.5px solid var(--stroke);
-      padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.28), 0 0 10px rgba(255,215,0,.18);
-      color:var(--gold); transition:.25s; overflow:hidden; cursor:pointer;
-    }
-    .card:hover{ transform:translateY(-3px); box-shadow:0 16px 44px rgba(0,0,0,.38), 0 0 24px var(--gold), 0 0 46px var(--amber) }
-    .card.done{
-      border-color:rgba(16,185,129,.6); background:linear-gradient(180deg, var(--greenSoft), rgba(255,255,255,.03));
-      color:#d1fae5; text-shadow:none; box-shadow:0 0 24px rgba(16,185,129,.35), inset 0 0 0 1px rgba(16,185,129,.35);
-    }
-    .card h2{margin:0 0 6px; font:600 1.05rem/1.2 'Inter',sans-serif}
-    .region{font-size:.82rem; color:var(--muted); margin-bottom:10px}
-    .meta{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:6px}
-    .time{display:flex; flex-direction:column; gap:3px; font-size:.9rem; color:#fff}
-    .time small{ color:var(--muted); font-size:.72rem }
-    .countdown{ font-variant-numeric:tabular-nums; font-size:.95rem }
-    .slotbar{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
-    .slot{
-      border:1px solid var(--stroke); border-radius:10px; padding:6px 8px; font-size:.78rem;
-      background:rgba(0,0,0,.25); color:#ffeaa7; display:flex; gap:6px; align-items:center;
-    }
-    .slot .badge{font-weight:800; font-size:.7rem; color:#2a0b0b; background:var(--gold); padding:2px 6px; border-radius:6px}
-    .slot .cd{font-variant-numeric:tabular-nums}
-    .btnline{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap}
-    .btn{
-      appearance:none; border:none; padding:9px 12px; border-radius:12px; font-weight:800; letter-spacing:.3px;
-      background:rgba(255,255,255,.04); color:var(--gold); border:1px solid var(--stroke);
-      cursor:pointer; transition:.25s; min-width:130px;
-    }
-    .btn:hover{ background:var(--gold); color:#2a0b0b; box-shadow:0 0 20px var(--amber), 0 0 40px var(--gold) }
-    .btn.done{ background:var(--greenSoft); border-color:rgba(16,185,129,.6); color:#eafff6 }
-    .btn.blue{ background:var(--blueSoft); border-color:rgba(56,189,248,.6); color:#e0f7ff }
-    .btn.rose{ background:var(--roseSoft); border-color:rgba(251,113,133,.6); color:#ffe6ea }
-    .kebab{
-      position:absolute; top:10px; right:10px; width:36px; height:36px; display:grid; place-items:center;
-      border-radius:10px; border:1px solid var(--stroke); background:rgba(0,0,0,.25); cursor:pointer; transition:.2s;
-    }
-    .kebab:hover{ background:rgba(255,215,0,.16) }
-    .menu{
-      position:absolute; top:50px; right:10px; min-width:220px; border-radius:12px; overflow:hidden;
-      background:rgba(0,0,0,.92); border:1px solid var(--stroke); box-shadow:0 12px 28px rgba(0,0,0,.45);
-      display:none; z-index:3;
-    }
-    .menu button{
-      width:100%; text-align:left; padding:10px 12px; background:transparent; border:none; color:#ffd;
-      font:600 .9rem 'Inter',sans-serif; cursor:pointer;
-    }
-    .menu button:hover{ background:rgba(255,215,0,.12) }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(153, 0, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(204, 51, 51, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
 
-    .modal-backdrop{
-      position:fixed; inset:0; background:rgba(0,0,0,.65); display:none; align-items:center; justify-content:center; z-index:60;
-      backdrop-filter: blur(3px);
-    }
-    .modal{
-      width:min(560px, 94%); background:#0c0c0c; border:1px solid var(--stroke); border-radius:16px; padding:16px;
-      box-shadow:0 12px 30px rgba(0,0,0,.5);
-    }
-    .modal h3{margin:0 0 10px; font:800 1.05rem/1.2 'Inter',sans-serif}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .modal input, .modal select{
-      flex:1; padding:10px; border-radius:10px; border:1px solid var(--stroke); background:#111; color:#ffd; text-align:center;
-      font:600 .95rem 'Inter',sans-serif;
-    }
-    .modal .actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
-    .modal .actions button{flex:1}
-    .help{width:min(820px,94%)}
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
 
-    .topbar{
-      width:min(1280px,95%); margin:10px auto 0; display:flex; gap:8px; flex-wrap:wrap; justify-content:center
-    }
-    .topbar .btn{min-width:150px}
+        .header h1 {
+            font-size: 2.5rem;
+            background: var(--red-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(153, 0, 0, 0.3);
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
 
-    footer{height:26px}
-  </style>
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(153, 0, 0, 0.5)); }
+            to { filter: drop-shadow(0 0 15px rgba(153, 0, 0, 0.8)); }
+        }
+
+        .header::after {
+            content: "";
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: var(--red-gradient);
+            margin: 15px auto;
+            border-radius: 3px;
+        }
+
+        .sound-control {
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--red-primary);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .sound-control:hover {
+            background: var(--red-primary);
+            color: white;
+        }
+
+        .datetime-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .date-box, .time-box {
+            background: var(--bg-card);
+            padding: 15px 30px;
+            border-radius: 12px;
+            border: 2px solid rgba(153, 0, 0, 0.3);
+            box-shadow: var(--shadow-red), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .date-box::before, .time-box::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--red-gradient);
+        }
+
+        .date-label, .time-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .date-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #cc3333, #ff4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #ff4444, #cc3333);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-separator { animation: blink 1s ease-in-out infinite; }
+        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.3; } }
+
+        .wib-badge {
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            background: rgba(153, 0, 0, 0.2);
+            border: 1px solid rgba(204, 51, 51, 0.4);
+            border-radius: 20px;
+            color: var(--red-light);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 14px 20px;
+            padding-left: 45px;
+            background: var(--bg-card);
+            border: 1px solid rgba(153, 0, 0, 0.3);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            box-shadow: var(--shadow-red);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--red-primary);
+            box-shadow: 0 0 0 3px rgba(153, 0, 0, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--red-primary);
+        }
+
+        .search-results { margin-top: 10px; color: var(--text-secondary); text-align: center; }
+
+        .ttg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .ttg-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-red);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(153, 0, 0, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ttg-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: var(--red-gradient);
+            z-index: 2;
+        }
+
+        .ttg-card:hover { transform: translateY(-8px) scale(1.02); }
+
+        .ttg-card__title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(153, 0, 0, 0.2);
+            color: var(--text-light);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        /* Style Tampilan Result Single (Prize 1 Saja) */
+        .result-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--red-accent);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px 15px;
+            border-radius: 6px;
+            border: 1px dashed var(--red-primary);
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--red-primary);
+            margin-top: 5px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        /* Style Tampilan Result Multi (3 Prize) */
+        .result-display.multi {
+            flex-direction: column;
+            font-size: 0.95rem;
+            gap: 4px;
+            padding: 8px 10px;
+            width: 100%;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 2px 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .result-row:last-child { border-bottom: none; }
+        .result-label { color: #888; font-weight: normal; font-size: 0.8rem; }
+        .result-val { color: var(--red-accent); font-weight: bold; letter-spacing: 2px; }
+
+        .countdown-timer {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .countdown-timer.phase-countdown {
+            color: var(--red-accent);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            background: rgba(153, 0, 0, 0.15);
+        }
+
+        .countdown-timer.phase-betclose {
+            color: #aaa;
+            border-color: #555;
+            background: #333;
+            font-size: 1.1rem;
+        }
+
+        .countdown-timer.warning {
+            color: #ffa500;
+            animation: pulse 1s infinite;
+            border-color: rgba(255, 165, 0, 0.5);
+            background: rgba(255, 165, 0, 0.1);
+        }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.05); } }
+
+        .ttg-card__body { flex: 1; }
+
+        .ttg-card__row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ttg-card__label {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .ttg-card__label svg { width: 18px; height: 18px; margin-right: 8px; color: var(--red-primary); }
+
+        .ttg-card__value { font-weight: 500; color: var(--text-light); }
+        .ttg-card__value--tutup { color: #ff6b6b; }
+        .ttg-card__value--buka { color: #51cf66; }
+
+        .ttg-card__footer {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-website { background: var(--red-gradient); color: var(--bg-dark); flex: 1; }
+        .btn-input-result { background: transparent; border: 1px solid var(--red-light); color: var(--red-light); flex: 1; }
+        .btn-input-result:hover { background: var(--red-light); color: white; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--modal-overlay);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .modal-box {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--red-primary);
+            box-shadow: 0 0 30px rgba(153, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--red-light);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            background: #111;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--red-light);
+            box-shadow: 0 0 10px rgba(204, 51, 51, 0.3);
+        }
+
+        .modal-actions { display: flex; gap: 10px; justify-content: center; }
+        .btn-modal { padding: 10px 25px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: transform 0.2s; }
+        .btn-modal:hover { transform: scale(1.05); }
+        .btn-primary { background: var(--red-primary); color: white; }
+        .btn-secondary { background: #444; color: white; }
+
+        /* Snowflake */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            z-index: 9999;
+            color: #fff;
+            font-size: 1em;
+            pointer-events: none;
+            user-select: none;
+            animation-name: fall;
+            animation-timing-function: linear;
+        }
+        @keyframes fall { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .datetime-container { gap: 15px; flex-direction: column; }
+            .ttg-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="brand"><span class="dot"></span>GPT-CLASS PASARAN</div>
-    <div class="bar">
-      <button class="pill" id="helpBtn">Bantuan</button>
+
+<div class="header">
+    <h1>JADWAL TOGEL</h1>
+    
+    <!-- Toggle Sound -->
+    <button id="soundToggle" class="sound-control">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <span id="soundText">Sound: OFF</span>
+    </button>
+
+    <div class="datetime-container">
+        <div class="date-box">
+            <div class="date-label">Tanggal</div>
+            <div class="date-value">
+                <svg class="date-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span id="dateDisplay"></span>
+            </div>
+        </div>
+        <div class="time-box">
+            <div class="time-label">Waktu</div>
+            <div class="time-value">
+                <svg class="time-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span id="timeDisplay"></span>
+                <span class="wib-badge">WIB</span>
+            </div>
+        </div>
     </div>
-  </header>
+</div>
 
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <!-- Hilangkan input pencarian di sini -->
-    <!-- <input type="text" id="search" placeholder="Cari pasaran… (ketik untuk filter)"/> -->
-    <div class="bar" id="regions"></div>
-    <div class="bar" id="extraFilters"></div>
-    <div class="bar" id="sorter"></div>
-    <div class="bar" id="tzBar"></div>
-    <div class="bar" id="vpnControls"></div>
-  </div>
-
-  <!-- Panel info -->
-  <div class="panel" id="legend">
-    <span><span class="dot dot-gold"></span>Belum ditonton</span>
-    <span><span class="dot dot-green"></span>Done (ditonton)</span>
-    <span class="sep">|</span>
-    <span class="muted">Jam ditafsirkan sesuai <strong>Zona Waktu</strong> yang dipilih (default: perangkat).</span>
-  </div>
-
-  <!-- Top batch actions -->
-  <div class="topbar">
-    <button class="btn" id="markAllBtn">Mark All Upcoming Done</button>
-    <button class="btn rose" id="resetTodayBtn">Reset Hari Ini</button>
-    <button class="btn blue" id="openAmericaBtn">Open All AMERICA via EU VPN</button>
-  </div>
-
-  <!-- Grid -->
-  <div class="grid" id="marketGrid"></div>
-  <footer></footer>
-
-  <!-- Modal: Edit Jam / Multi-slot -->
-  <div class="modal-backdrop" id="editModalBackdrop" aria-hidden="true">
-    <div class="modal">
-      <h3>Atur Jam Result (Multi-Slot)</h3>
-      <p id="editTarget" class="muted" style="margin-top:-6px"></p>
-      <div class="row" id="slotList"></div>
-      <div class="row">
-        <input id="timeInput" type="time" />
-      </div>
-      <div class="actions">
-        <button class="btn" id="addSlotBtn">Tambah Slot</button>
-        <button class="btn" id="saveTimeBtn">Simpan Perubahan</button>
-        <button class="btn rose" id="clearAllTimeBtn">Hapus Semua Slot</button>
-        <button class="btn" id="cancelTimeBtn">Tutup</button>
-      </div>
+<div class="search-container">
+    <div class="search-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
     </div>
-  </div>
+    <input type="text" id="searchInput" class="search-box" placeholder="Cari nama pasaran togel..." />
+    <div id="searchResults" class="search-results"></div>
+</div>
 
-  <!-- Modal: VPN -->
-  <div class="modal-backdrop" id="vpnModalBackdrop" aria-hidden="true">
-    <div class="modal">
-      <h3>VPN Quick Connect (EU)</h3>
-      <p class="muted" style="margin-top:-6px">Ini tidak memasang VPN di situs. Kita hanya memicu aplikasi VPN (deep link), lalu membuka pasaran otomatis.</p>
-      <div class="row">
-        <select id="vpnProvider">
-          <option value="custom">Custom Deep Link</option>
-          <option value="nord">NordVPN</option>
-          <option value="surf">Surfshark</option>
-          <option value="express">ExpressVPN</option>
-          <option value="proton">Proton VPN</option>
-        </select>
-        <select id="vpnCountry">
-          <option value="eu">EU (auto)</option>
-          <option value="nl">Netherlands</option>
-          <option value="de">Germany</option>
-          <option value="fr">France</option>
-          <option value="uk">United Kingdom</option>
-          <option value="se">Sweden</option>
-          <option value="it">Italy</option>
-          <option value="es">Spain</option>
-        </select>
-      </div>
-      <div class="row">
-        <input id="vpnCustom" placeholder="Custom deep link (cth: nordvpn://connect?country=de)" />
-      </div>
-      <div class="actions">
-        <button class="btn blue" id="vpnTestBtn">Tes Quick Connect</button>
-        <button class="btn" id="vpnSaveBtn">Simpan</button>
-        <button class="btn" id="vpnCancelBtn">Tutup</button>
-      </div>
-      <p class="muted" style="margin-top:8px">
-        Contoh umum: NordVPN <code>nordvpn://connect?country=de</code> • Surfshark <code>surfshark://connect?server=nl</code><br/>
-        Express/Proton bervariasi — jika ragu gunakan “Custom”.
-      </p>
+<div id="jadwal-kartu" class="ttg-grid"></div>
+
+<!-- MODAL ALERT: BET CLOSE -->
+<div id="alertModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title" style="color: #ff4444;">⚠️ BET CLOSE</div>
+        <div class="modal-body">
+            Pasaran <strong id="alertMarketName" style="color: white; font-size: 1.2rem;"></strong> <br>
+            Sudah memasuki masa penutupan.
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-primary" onclick="closeAlertModal()">OK, Mengerti</button>
+        </div>
     </div>
-  </div>
+</div>
 
-  <!-- Modal: Bantuan -->
-  <div class="modal-backdrop" id="helpModal" aria-hidden="true">
-    <div class="modal help">
-      <h3>Panduan Cepat</h3>
-      <ul style="line-height:1.6; margin-top:6px">
-        <li><strong>DONE:</strong> Tandai setelah menonton (tersimpan harian, auto-reset esok hari).</li>
-        <li><strong>Jam Result:</strong> Otomatis terdeteksi dari nama (mis. 0130/0930/1400/1530/1630/2100/2330). Kamu bisa <em>Edit Jam</em> dan <em>Tambah Slot</em> per pasaran.</li>
-        <li><strong>Countdown:</strong> Per slot + highlight <em>Next</em> paling dekat.</li>
-        <li><strong>VPN EU:</strong> Setel di “Quick Connect”. Gunakan “Buka via EU VPN” pada kartu atau “Open All AMERICA via EU VPN”.</li>
-        <li><strong>Notif:</strong> Aktifkan dari toolbar (Notifikasi: ON). Alarm muncul 5 menit sebelum result terdekat.</li>
-        <li><strong>Zona Waktu:</strong> Default pakai jam perangkat. Opsi “Custom UTC Offset” untuk menafsirkan jam result.</li>
-        <li><strong>Ekspor/Impor:</strong> Simpan semua pengaturan jadi file JSON, bisa dipindahkan antar device.</li>
-        <li><strong>Shortcut:</strong> <code>/</code> fokus cari • <code>Esc</code> tutup modal • <code>Ctrl/⌘+F</code> fokus cari.</li>
-      </ul>
-      <div class="actions">
-        <button class="btn" id="helpCloseBtn">Tutup</button>
-      </div>
+<!-- MODAL INPUT RESULT (Dinamis 1 atau 3 Input) -->
+<div id="resultModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title">Input Result</div>
+        <div class="modal-body" style="text-align: left;">
+            Pasaran: <span id="resultMarketName" style="color: var(--red-light); font-weight: bold;"></span>
+            <div id="resultInputsContainer" style="margin-top: 15px;">
+                <!-- Input fields will be injected here via JS -->
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-secondary" onclick="closeResultModal()">Batal</button>
+            <button class="btn-modal btn-primary" onclick="saveResult()">Simpan</button>
+        </div>
     </div>
-  </div>
+</div>
 
-  <script>
-    // ===================== DATA =====================
-    const pasaran = [
-      {name:"TOTOMACAUPAGI", link:"https://kick.com/live-ttm4d", region:"MACAU"},
-      {name:"KENTUCKYMID", link:"https://www.kylottery.com/apps/draw_gamess", region:"AMERICA"},
-      {name:"FLORIDAMID", link:"http://www.flalottery.com/pick4.do", region:"AMERICA"},
-      {name:"HUAHIN0100", link:"https://huahinlottery.com", region:"THAI"},
-      {name:"BANGKOK0130", link:"https://bangkokpoolstoday.com/liveDraw.html", region:"THAI"},
-      {name:"NEW YORKMID", link:"https://nylottery.ny.gov/draw-game?game=win4", region:"AMERICA"},
-      {name:"CAROLINADAY", link:"https://www.wral.com/entertainment/lottery", region:"AMERICA"},
-      {name:"BRUNEI02", link:"https://bruneipools.com/live-draw.html", region:"BRUNEI"},
-      {name:"OREGON03", link:"https://www.oregonlottery.org/pick-4/winning-numbers/", region:"AMERICA"},
-      {name:"OREGON06", link:"https://www.oregonlottery.org/pick-4/winning-numbers/", region:"AMERICA"},
-      {name:"CALIFORNIA", link:"https://www.lotteryusa.com/california/daily-4/", region:"AMERICA"},
-      {name:"FLORIDAEVE", link:"https://floridalottery.com/where-to-play", region:"AMERICA"},
-      {name:"OREGON09", link:"https://www.oregonlottery.org/pick-4/winning-numbers/", region:"AMERICA"},
-      {name:"BANGKOK0930", link:"https://bangkokpoolstoday.com/liveDraw.html", region:"THAI"},
-      {name:"NEWYORKEVE", link:"https://nylottery.ny.gov/draw-game?game=win4", region:"AMERICA"},
-      {name:"KENTUCKYEVE", link:"https://www.kylottery.com/apps/draw_gamess", region:"AMERICA"},
-      {name:"CAROLINAEVE", link:"https://www.lotteryusa.com/", region:"AMERICA"},
-      {name:"CHELSEA11", link:"https://chelseapools.co.uk/", region:"UK"},
-      {name:"TOTOCAMBODIALIVE", link:"https://www.youtube.com/@TotoCambodiaOfficial", region:"CAMBODIA"},
-      {name:"CAMBODIAHKB", link:"https://www.magnumcambodia.com/", region:"CAMBODIA"},
-      {name:"OREGON12", link:"https://www.oregonlottery.org/pick-4/winning-numbers/", region:"AMERICA"},
-      {name:"POIPET12", link:"https://www.youtube.com/channel/UCASg7YGGNAJ9saOZVeqVVuw", region:"CAMBODIA"},
-      {name:"TOTOMACAUSIANG", link:"https://kick.com/live-ttm4d", region:"MACAU"},
-      {name:"BULLSEYE", link:"https://www.mylotto.co.nz/results/bullseye", region:"NZ"},
-      {name:"SYDNEYHKB", link:"https://www.sydneypoolstoday.com/", region:"AUSTRALIA"},
-      {name:"SYDNEYLIVE", link:"https://kick.com/sydney-lotto-official", region:"AUSTRALIA"},
-      {name:"JAKARTA1400", link:"https://kick.com/studio-live-game", region:"INDONESIA"},
-      {name:"BRUNEI14", link:"https://bruneipools.com/live-draw.html", region:"BRUNEI"},
-      {name:"CHELSEA15", link:"https://chelseapools.co.uk/", region:"UK"},
-      {name:"TOTOMACAU 5D SORE", link:"https://kick.com/studio-live-game", region:"MACAU"},
-      {name:"CHINA HKB", link:"https://www.chinapools.asia/apps/live", region:"CHINA"},
-      {name:"POIPET15", link:"https://www.youtube.com/channel/UCASg7YGGNAJ9saOZVeqVVuw", region:"CAMBODIA"},
-      {name:"TOTOMALI1530", link:"https://totomali.com/", region:"MALI"},
-      {name:"HOKI DRAW", link:"https://www.hokidraw.com/live-draw.html", region:"GLOBAL"},
-      {name:"TOTOMACAUSORE", link:"https://kick.com/live-ttm4d", region:"MACAU"},
-      {name:"HUAHIN1630", link:"https://huahinlottery.com", region:"THAI"},
-      {name:"KINGKONG4D", link:"https://kingkongpools.com/", region:"GLOBAL"},
-      {name:"JEPANG HKB", link:"https://www.japanpools.online/", region:"JAPAN"},
-      {name:"SINGAPORE", link:"http://www.singaporepools.com.sg", region:"SG"},
-      {name:"MAGNUM4D", link:"https://www.magnum4d.my/en/", region:"MALAYSIA"},
-      {name:"TOTOMACAUMALAMI", link:"https://kick.com/live-ttm4d", region:"MACAU"},
-      {name:"CHELSEA19", link:"https://chelseapools.co.uk/", region:"UK"},
-      {name:"POIPET19", link:"https://www.youtube.com/channel/UCASg7YGGNAJ9saOZVeqVVuw", region:"CAMBODIA"},
-      {name:"PCSO", link:"https://www.pcso.gov.ph/LiveStreaming.aspx", region:"PHILIPPINES"},
-      {name:"TOTOMALI 2030", link:"https://totomali.com/", region:"MALI"},
-      {name:"TAIWAN HKB", link:"https://taiwan-lotto.com/", region:"TAIWAN"},
-      {name:"HUAHIN 2100", link:"https://huahinlottery.com", region:"THAI"},
-      {name:"CHELSEA 21", link:"https://chelseapools.co.uk/", region:"UK"},
-      {name:"TOTOMACAU 5D MALAM", link:"https://kick.com/studio-live-game", region:"MACAU"},
-      {name:"NEVADA", link:"https://www.nevadalottery.us", region:"AMERICA"},
-      {name:"BRUNEI 21", link:"https://bruneipools.com/live-draw.html", region:"BRUNEI"},
-      {name:"TOTOMACAU MALAM II", link:"https://kick.com/live-ttm4d", region:"MACAU"},
-      {name:"POIPET22", link:"https://www.youtube.com/channel/UCASg7YGGNAJ9saOZVeqVVuw", region:"CAMBODIA"},
-      {name:"HONGKONG HKB", link:"https://lottohongkong.fun/", region:"HK"},
-      {name:"HONGKONG LIVE", link:"https://kick.com/hongkong-lotto-official", region:"HK"},
-      {name:"JAKARTA 2330", link:"https://kick.com/studio-live-game", region:"INDONESIA"},
-      {name:"TOTOMALI 2330", link:"https://totomali.com/", region:"MALI"}
+<script>
+    // --- DATA & STATE ---
+    const pasaranData = [
+        // CATATAN: prizeCount: 3 artinya ada 3 prize (P1, P2, P3)
+        // Jika tidak ada properti prizeCount, defaultnya adalah 1 prize.
+        
+        {name: "HOKIDRAW", days: "Senin s/d Minggu", tutup: "23:59 WIB", buka: "00:00 WIB", website: "https://hokidraw.com/", live: "https://dlive.tv/u/HOKIDRAW", note: "RESULT 24X - 1 JAM SEKALI"},
+        {name: "TOTO MACAU PAGI", days: "Senin s/d Minggu", tutup: "00:00 WIB", buka: "00:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+        {name: "HUAHIN 0100", days: "Senin s/d Minggu", tutup: "00:45 WIB", buka: "01:00 WIB", website: "https://huahinlottery.com/", live: "https://www.youtube.com/@huahinlottery5727"},
+        {name: "KENTUCKY MIDDAY", days: "Senin s/d Minggu", tutup: "01:05 WIB", buka: "01:20 WIB", website: "https://www.kylottery.com/apps/", live: null},
+        {name: "BANGKOK 0130", days: "Senin s/d Minggu", tutup: "01:15 WIB", buka: "01:30 WIB", website: "https://bangkokpoolstoday.com/", live: null},
+        {name: "FLORIDA MIDDAY", days: "Senin s/d Minggu", tutup: "01:20 WIB", buka: "01:30 WIB", website: "https://floridalottery.com/", live: "https://www.youtube.com/user/floridalottery"},
+        {name: "NEWYORK MIDDAY", days: "Senin s/d Minggu", tutup: "02:15 WIB", buka: "02:25 WIB", website: "https://nylottery.ny.gov/", live: "https://www.youtube.com/@NewYorkLottery/streams"},
+        {name: "BRUNEI 02", days: "Senin s/d Minggu", tutup: "02:30 WIB", buka: "02:45 WIB", website: "https://bruneipools.com/", live: null},
+        {name: "CAROLINA DAY", days: "Senin s/d Minggu", tutup: "02:45 WIB", buka: "03:00 WIB", website: "https://www.wral.com/entertainment/lottery/", live: null},
+        {name: "OREGON 03", days: "Senin s/d Minggu", tutup: "03:50 WIB", buka: "04:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+        {name: "OREGON 06", days: "Senin s/d Minggu", tutup: "06:50 WIB", buka: "07:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+        {name: "BANGKOK 0930", days: "Senin s/d Minggu", tutup: "09:15 WIB", buka: "09:30 WIB", website: "https://bangkokpoolstoday.com/", live: null},
+        {name: "CALIFORNIA", days: "Senin s/d Minggu", tutup: "09:25 WIB", buka: "09:30 WIB", website: "https://www.calottery.com/draw-games/daily-4", live: null},
+        {name: "FLORIDA EVENING", days: "Senin s/d Minggu", tutup: "09:35 WIB", buka: "09:45 WIB", website: "https://floridalottery.com/games/draw-games/pick-4", live: "https://www.youtube.com/user/floridalottery"},
+        {name: "OREGON 09", days: "Senin s/d Minggu", tutup: "09:50 WIB", buka: "10:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+        {name: "NEWYORK EVENING", days: "Senin s/d Minggu", tutup: "10:25 WIB", buka: "10:35 WIB", website: "https://nylottery.ny.gov/", live: "https://www.youtube.com/@NewYorkLottery/streams"},
+        {name: "KENTUCKY EVENING", days: "Senin s/d Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", website: "https://www.kylottery.com/apps/", live: null},
+        
+        // CONTOH PASARAN 3 PRIZE:
+        {name: "TOTOCAMBODIA", days: "Senin s/d Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", website: "https://totocambodialive.com/", live: "https://kick.com/totocambodia", prizeCount: 3},
+        
+        {name: "CHELSEA 11", days: "Senin s/d Minggu", tutup: "11:00 WIB", buka: "11:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+        {name: "CAROLINA EVENING", days: "Senin s/d Minggu", tutup: "11:17 WIB", buka: "11:22 WIB", website: "https://www.wral.com/entertainment/lottery/", live: null},
+        {name: "BULLSEYE", days: "Senin s/d Minggu", tutup: "12:00 WIB", buka: "12:15 WIB", website: "https://mylotto.co.nz/results/bullseye", live: null, prizeCount: 3},
+        {name: "POIPET 12", days: "Senin s/d Minggu", tutup: "12:15 WIB", buka: "12:30 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
+        {name: "OREGON 12", days: "Senin s/d Minggu", tutup: "12:50 WIB", buka: "13:00 WIB", website: "https://www.oregonlottery.org/pick-4/winning-numbers/", live: null},
+        {name: "TOTOMACAU SIANG", days: "Senin s/d Minggu", tutup: "13:00 WIB", buka: "13:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+        
+        // CONTOH PASARAN 3 PRIZE:
+        {name: "SYDNEY", days: "Senin s/d Minggu", tutup: "13:49 WIB", buka: "14:05 WIB", website: "https://sydneyfunlotto.net/", live: "https://kick.com/sydney-lotto-official", prizeCount: 3},
+        
+        {name: "BRUNEI 14", days: "Senin s/d Minggu", tutup: "14:30 WIB", buka: "14:45 WIB", website: "https://bruneipools.com/", live: null},
+        {name: "CHELSEA 15", days: "Senin s/d Minggu", tutup: "15:00 WIB", buka: "15:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+        {name: "TOTOMALI 1530", days: "Senin s/d Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", website: "https://totomali.com/", live: "https://www.youtube.com/@TotoMaliLive"},
+        {name: "POIPET 15", days: "Senin s/d Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
+        {name: "TOTOMACAU SORE", days: "Senin s/d Minggu", tutup: "16:00 WIB", buka: "16:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+        {name: "HUAHIN 1630", days: "Senin s/d Minggu", tutup: "16:15 WIB", buka: "16:30 WIB", website: "https://huahinlottery.com/", live: "https://www.youtube.com/@huahinlottery5727"},
+        {name: "KING KONG4D SORE", days: "Senin s/d Minggu", tutup: "17:00 WIB", buka: "17:15 WIB", website: "https://kingkongpools.id/", live: "https://kick.com/king-kong-pools"},
+        
+        // CONTOH PASARAN 3 PRIZE:
+        {name: "SINGAPORE", days: "HARI SELASA & JUM'AT ( LIBUR )", tutup: "17:30 WIB", buka: "17:45 WIB", website: "https://www.singaporepools.com.sg/landing/en/Pages/index.html", live: null, activeDays: [1, 3, 4, 6, 0], prizeCount: 3},
+        
+        {name: "MAGNUM4D", days: "HARI RABU, SABTU & MINGGU", tutup: "18:10 WIB", buka: "18:40 WIB", website: "https://www.magnum4d.my/en", live: null, activeDays: [3, 6, 0]},
+        {name: "TOTOMACAU MALAM I", days: "Senin s/d Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+        {name: "CHELSEA 19", days: "Senin s/d Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+        {name: "POIPET 19", days: "Senin s/d Minggu", tutup: "19:30 WIB", buka: "19:45 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
+        {name: "PCSO", days: "Minggu Libur", tutup: "19:50 WIB", buka: "20:10 WIB", website: "https://www.pcso.gov.ph/", live: "https://www.youtube.com/@PCSOGOVPHOfficial/streams", activeDays: [1, 2, 3, 4, 5, 6]},
+        {name: "TOTOMALI 2030", days: "Senin s/d Minggu", tutup: "20:15 WIB", buka: "20:30 WIB", website: "https://totomali.com/", live: "https://www.youtube.com/@TotoMaliLive"},
+        {name: "HUAHIN 2100", days: "Senin s/d Minggu", tutup: "20:45 WIB", buka: "21:00 WIB", website: "https://huahinlottery.com/", live: "https://www.youtube.com/@huahinlottery5727"},
+        {name: "CHELSEA 21", days: "Senin s/d Minggu", tutup: "21:00 WIB", buka: "21:15 WIB", website: "https://chelseapools.co.uk/", live: null},
+        {name: "NEVADA", days: "Senin s/d Minggu", tutup: "21:15 WIB", buka: "21:30 WIB", website: "https://www.nevadalottery.us/", live: null},
+        {name: "BRUNEI 21", days: "Senin s/d Minggu", tutup: "21:30 WIB", buka: "21:45 WIB", website: "https://bruneipools.com/", live: null},
+        {name: "TOTOMACAU MALAM II", days: "Senin s/d Minggu", tutup: "22:00 WIB", buka: "22:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+        {name: "POIPET 22", days: "Senin s/d Minggu", tutup: "22:30 WIB", buka: "22:45 WIB", website: "https://poipetlottery.com/", live: "https://www.youtube.com/@poipetlottery70/featured"},
+        
+        // CONTOH PASARAN 3 PRIZE:
+        {name: "HONGKONG", days: "Senin s/d Minggu", tutup: "22:59 WIB", buka: "23:15 WIB", website: "https://hongkongfunlotto.net/", live: "https://kick.com/hongkong-lotto-official", prizeCount: 3},
+        
+        {name: "TOTOMACAU MALAM III", days: "Senin s/d Minggu", tutup: "23:00 WIB", buka: "23:15 WIB", website: "https://totomacaunew.us/", live: "https://kick.com/live-ttm4d"},
+        {name: "TOTOMALI 2330", days: "Senin s/d Minggu", tutup: "23:15 WIB", buka: "23:30 WIB", website: "https://totomali.com/", live: "https://www.youtube.com/@TotoMaliLive"},
+        {name: "KING KONG4D MALAM", days: "Senin s/d Minggu", tutup: "23:30 WIB", buka: "23:45 WIB", website: "https://kingkongpools.id/", live: "https://kick.com/king-kong-pools"}
     ];
 
-    // ===================== STATE / CONST =====================
-    const grid = document.getElementById("marketGrid");
-    // const search = document.getElementById("search"); // dihapus
-    const regionsEl = document.getElementById("regions");
-    // const extraFiltersEl = document.getElementById("extraFilters");
-    // const sorterEl = document.getElementById("sorter");
-    // const tzBar = document.getElementById("tzBar");
-    const legendEl = document.getElementById("legend");
-    const markAllBtn = document.getElementById("markAllBtn");
-    const resetTodayBtn = document.getElementById("resetTodayBtn");
-    const openAmericaBtn = document.getElementById("openAmericaBtn");
+    let alertStates = {};
+    let soundEnabled = false;
+    let currentEditingMarket = null;
+    let savedResults = JSON.parse(localStorage.getItem('togelResults')) || {};
 
-    const uniqueRegions = [...new Set(pasaran.map(p=>p.region))].sort((a,b)=>a.localeCompare(b));
-    let activeRegion = "ALL";
-    let showMode = "ALL"; // ALL | UPCOMING | DONE
-    let sortMode = "TIME"; // TIME | NAME
+    // --- AUDIO & SPEECH ENGINE ---
+    let audioCtx = null;
 
-    const todayKey = new Date().toISOString().slice(0,10);
-
-    const STORAGE_DONE = "pasaran_done_" + todayKey;
-    const STORAGE_TIMES = "pasaran_times_v2"; // map name -> array of "HH:MM"
-    const STORAGE_VPN = "pasaran_vpn_settings";
-    const STORAGE_NOTIF = "pasaran_notif_optin";
-    const STORAGE_TZ = "pasaran_tz_offset";
-
-    // done map
-    const doneMap = new Map(JSON.parse(localStorage.getItem(STORAGE_DONE) || "[]"));
-    // custom times as objects
-    const rawTimes = JSON.parse(localStorage.getItem(STORAGE_TIMES) || "{}");
-    const customTimes = new Map(Object.entries(rawTimes)); // value: array or string (backwards)
-
-    // vpn + notif + tz
-    let vpnSettings = JSON.parse(localStorage.getItem(STORAGE_VPN) || `{"provider":"custom","country":"eu","custom":""}`);
-    let notifOptIn = localStorage.getItem(STORAGE_NOTIF) === "1";
-
-    // deklarasi tzOffset
-    let tzOffset = parseFloat(localStorage.getItem(STORAGE_TZ));
-    if (isNaN(tzOffset)) tzOffset = NaN; // default: device timezone
-
-    // ===================== TIME HELPERS =====================
-    function guessTimesFromName(name){
-      const matches = [...name.matchAll(/(^|\s)(([01]\d|2[0-3])[0-5]\d)($|\s)/g)].map(m=>m[2]);
-      const times = matches.map(s=>s.slice(0,2)+":"+s.slice(2));
-      return [...new Set(times)];
-    }
-    function getTimes(name){
-      const custom = customTimes.get(name);
-      const arr = Array.isArray(custom) ? custom : (typeof custom === "string" && custom ? [custom] : []);
-      const fromName = guessTimesFromName(name);
-      const all = [...arr, ...fromName];
-      const uniq = [...new Set(all)];
-      return uniq.sort((a,b)=>a.localeCompare(b));
-    }
-    function toMillisFromHHMM(hhmm, base=new Date()){
-      const [H,M] = hhmm.split(":").map(n=>parseInt(n,10));
-      const d = new Date(base);
-      if(Number.isFinite(tzOffset)){ // interpret in UTC+offset
-        const utc = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-        const msInZone = (H*60 + M) * 60 * 1000;
-        const zoneMs = tzOffset * 60 * 60 * 1000;
-        return utc + msInZone - zoneMs;
-      } else {
-        d.setHours(H,M,0,0);
-        return d.getTime();
-      }
-    }
-    function nextOccurrence(hhmm){
-      const now = Date.now();
-      let t = toMillisFromHHMM(hhmm);
-      if(t < now){
-        t = toMillisFromHHMM(hhmm, new Date(Date.now() + 24*3600*1000));
-      }
-      return t;
-    }
-    function nextOfTimes(times){
-      if(!times || times.length===0) return null;
-      const arr = times.map(t=>({t, ts: nextOccurrence(t)}));
-      arr.sort((a,b)=>a.ts-b.ts);
-      return arr[0];
-    }
-    function formatCountdown(ms){
-      if(ms<0) ms=0;
-      const s = Math.floor(ms/1000);
-      const h = Math.floor(s/3600);
-      const m = Math.floor((s%3600)/60);
-      const sec = s%60;
-      return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
-    }
-
-    // ===================== UI HELPERS =====================
-    function pill(text, active, onClick){
-      const b = document.createElement("button");
-      b.className = "pill" + (active ? " active" : "");
-      b.textContent = text; b.onclick = onClick; return b;
-    }
-    function toast(msg){
-      const el = document.createElement("div");
-      el.textContent = msg;
-      Object.assign(el.style,{
-        position:"fixed", bottom:"22px", left:"50%", transform:"translateX(-50%)",
-        background:"rgba(0,0,0,.85)", color:"#ffd", padding:"10px 14px", borderRadius:"12px",
-        border:"1px solid rgba(255,215,0,.35)", boxShadow:"0 10px 24px rgba(0,0,0,.4)",
-        zIndex:1000, fontFamily:"inherit"
-      });
-      document.body.appendChild(el);
-      setTimeout(()=>el.remove(), 1400);
-    }
-    function copyToClipboard(text){
-      navigator.clipboard?.writeText(text).then(()=>toast("Disalin")).catch(()=>alert(text));
-    }
-
-    // ===================== CONTROLS =====================
-    const helpBtn = document.getElementById("helpBtn");
-    const helpModal = document.getElementById("helpModal");
-    const helpCloseBtn = document.getElementById("helpCloseBtn");
-    helpBtn.onclick = ()=>{ helpModal.style.display="flex"; helpModal.setAttribute("aria-hidden","false"); };
-    helpCloseBtn.onclick = ()=>{ helpModal.style.display="none"; helpModal.setAttribute("aria-hidden","true"); };
-    helpModal.addEventListener("click",(e)=>{ if(e.target===helpModal){ helpCloseBtn.click(); } });
-
-    function buildControls(){
-      // Membuat kontrol region
-      regionsEl.innerHTML = '';
-      regionsEl.appendChild(pill("ALL", activeRegion==="ALL", ()=>{ activeRegion="ALL"; render(); }));
-      uniqueRegions.forEach(r=>{
-        regionsEl.appendChild(pill(r, activeRegion===r, ()=>{ activeRegion=r; render(); }));
-      });
-    }
-
-    function openTzPrompt(){
-      const cur = Number.isFinite(tzOffset) ? tzOffset : "";
-      const val = prompt("Masukkan UTC offset (contoh: 7 untuk UTC+7, -4 untuk UTC-4). Kosongkan untuk kembali ke jam perangkat:", cur);
-      if(val===null) return;
-      const n = val.trim()==="" ? NaN : parseFloat(val);
-      if(!isNaN(n) && (n<-12 || n>14)) { toast("Offset tidak wajar. Rentang umum: -12 s/d +14"); return; }
-      if(val.trim()===""){ localStorage.removeItem(STORAGE_TZ); tzOffset = NaN; }
-      else { tzOffset = n; localStorage.setItem(STORAGE_TZ, String(tzOffset)); }
-      buildControls(); render();
-    }
-
-    // ===================== RENDER =====================
-    let countdownTimer = null;
-
-    function buildModel(){
-      return pasaran.map(p=>{
-        const times = getTimes(p.name);
-        const next = nextOfTimes(times);
-        return {...p, times, nextTs: next? next.ts : null, nextLabel: next? next.t : null};
-      });
-    }
-
-    function render(){
-      // Hentikan timer sebelumnya
-      if(countdownTimer) clearInterval(countdownTimer);
-      grid.innerHTML = '';
-
-      const query = ""; // Tidak ada filter pencarian
-      let model = buildModel();
-
-      // Filter region + search
-      model = model.filter(p =>
-        (activeRegion==="ALL" || p.region===activeRegion)
-        // Tidak filter berdasarkan query pencarian karena kolom dihapus
-      );
-
-      // Filter showMode
-      if(showMode==="UPCOMING"){
-        model = model.filter(p => p.nextTs && (p.nextTs - Date.now()) > 0 && !doneMap.get(p.name));
-      } else if(showMode==="DONE"){
-        model = model.filter(p => !!doneMap.get(p.name));
-      }
-
-      // Sorting
-      if(sortMode==="TIME"){
-        model.sort((a,b)=>{
-          if(a.nextTs && b.nextTs) return a.nextTs - b.nextTs;
-          else if(a.nextTs) return -1;
-          else if(b.nextTs) return 1;
-          return a.name.localeCompare(b.name);
-        });
-      } else {
-        model.sort((a,b)=>a.name.localeCompare(b.name));
-      }
-
-      // Render kartu
-      model.forEach(p=>{
-        const card = document.createElement("div");
-        card.className = "card" + (doneMap.get(p.name) ? " done" : "");
-        card.addEventListener("click",(e)=>{
-          if(e.target.closest(".btn") || e.target.closest(".kebab") || e.target.closest(".menu") || e.target.closest(".slot")) return;
-          window.open(p.link, "_blank");
-        });
-
-        const h2 = document.createElement("h2"); h2.textContent = p.name;
-        const region = document.createElement("div"); region.className="region"; region.textContent = p.region;
-
-        // Kebab menu
-        const kebab = document.createElement("div"); kebab.className="kebab"; kebab.innerHTML = "&#8942;";
-        const menu = document.createElement("div"); menu.className="menu";
-        const m1 = document.createElement("button"); m1.textContent = "Edit Jam / Slot"; m1.onclick = (e)=>{ e.stopPropagation(); openEditTime(p.name); hideMenus(); };
-        const m2 = document.createElement("button"); m2.textContent = "Salin Link"; m2.onclick = (e)=>{ e.stopPropagation(); copyToClipboard(p.link); hideMenus(); };
-        const m3 = document.createElement("button"); m3.textContent = "Buka Live"; m3.onclick = (e)=>{ e.stopPropagation(); window.open(p.link,"_blank"); hideMenus(); };
-        const m4 = document.createElement("button"); m4.textContent = "Buka via EU VPN"; m4.onclick = (e)=>{ e.stopPropagation(); connectVPNThenOpen(p.link); hideMenus(); };
-        menu.append(m1,m2,m3,m4);
-        kebab.onclick = (e)=>{ e.stopPropagation(); hideMenus(); menu.style.display="block"; };
-        document.addEventListener("click", hideMenus);
-        function hideMenus(){ menu.style.display="none"; }
-
-        const meta = document.createElement("div"); meta.className="meta";
-
-        // Info waktu
-        const timeBox = document.createElement("div"); timeBox.className="time";
-        const tl = document.createElement("div");
-        tl.innerHTML = `Next: <strong>${p.nextLabel}</strong>`;
-        const sub = document.createElement("small");
-        sub.textContent = p.nextLabel ? "Menuju result terdekat" : "Setel jam/slot untuk countdown";
-        timeBox.append(tl, sub);
-
-        const cd = document.createElement("div"); cd.className="countdown";
-        meta.append(timeBox, p.nextTs ? cd : document.createElement("div"));
-
-        if(p.nextTs){
-          const updateMain = ()=> cd.textContent = formatCountdown(p.nextTs - Date.now());
-          updateMain();
+    function initAudio() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
         }
-
-        // Slot waktu
-        const slotBar = document.createElement("div"); slotBar.className="slotbar";
-        if(p.times.length){
-          p.times.forEach((t, idx)=>{
-            const slot = document.createElement("div"); slot.className="slot";
-            const badge = document.createElement("span"); badge.className="badge"; badge.textContent = idx+1;
-            const timeTxt = document.createElement("span"); timeTxt.textContent = t;
-            const cdSpan = document.createElement("span"); cdSpan.className="cd"; cdSpan.textContent = '';
-            slot.append(badge, timeTxt, cdSpan);
-            slotBar.appendChild(slot);
-            // update
-            const nextTs = nextOccurrence(t);
-            const updateSlot = ()=>{ cdSpan.textContent = " • " + formatCountdown(nextTs - Date.now()); };
-            updateSlot();
-          });
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
         }
-
-        // Buttons
-        const btnline = document.createElement("div"); btnline.className="btnline";
-        const doneBtn = document.createElement("button");
-        doneBtn.className = "btn" + (doneMap.get(p.name) ? " done" : "");
-        doneBtn.textContent = doneMap.get(p.name) ? "DONE ✓" : "Tandai DONE";
-        doneBtn.onclick = (e)=>{ e.stopPropagation(); toggleDone(p.name); render(); };
-
-        const editBtn = document.createElement("button");
-        editBtn.className = "btn"; editBtn.textContent = "Edit Jam / Slot";
-        editBtn.onclick = (e)=>{ e.stopPropagation(); openEditTime(p.name); };
-
-        const vpnBtn = document.createElement("button");
-        vpnBtn.className = "btn blue"; vpnBtn.textContent = "Buka via EU VPN";
-        vpnBtn.onclick = (e)=>{ e.stopPropagation(); connectVPNThenOpen(p.link); };
-
-        btnline.append(doneBtn, editBtn, vpnBtn);
-
-        // Gabung semua
-        card.append(h2, region, kebab, menu, meta, slotBar, btnline);
-        grid.appendChild(card);
-
-        // Update countdown
-        if(p.nextTs){
-          const updateMain = ()=> cd.textContent = formatCountdown(p.nextTs - Date.now());
-          updateMain();
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
         }
-      });
-
-      // Timer global
-      if(countdownTimer) clearInterval(countdownTimer);
-      countdownTimer = setInterval(()=>{
-        document.querySelectorAll(".card").forEach((card)=>{
-          const title = card.querySelector("h2")?.textContent || "";
-          const times = getTimes(title);
-          const next = nextOfTimes(times);
-          const cdEl = card.querySelector(".countdown");
-          if(cdEl && next) cdEl.textContent = formatCountdown(next.ts - Date.now());
-          // per-slot
-          const slotEls = card.querySelectorAll(".slot");
-          slotEls.forEach((slotEl, idx)=>{
-            const t = times[idx];
-            if(!t) return;
-            const ts = nextOccurrence(t);
-            const cdSpan = slotEl.querySelector(".cd");
-            if(cdSpan) cdSpan.textContent = " • " + formatCountdown(ts - Date.now());
-          });
-        });
-      }, 1000);
-
-      scheduleNotifications(); // jadwalkan ulang
     }
 
-    function toggleDone(name){
-      if(doneMap.get(name)) doneMap.delete(name);
-      else doneMap.set(name, true);
-      localStorage.setItem(STORAGE_DONE, JSON.stringify(Array.from(doneMap.entries())));
+    function playDing() {
+        if (!soundEnabled || !audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.5);
     }
 
-    // ===================== EDIT TIME / MULTI-SLOT =====================
-    const editModalBackdrop = document.getElementById("editModalBackdrop");
-    const timeInput = document.getElementById("timeInput");
-    const editTarget = document.getElementById("editTarget");
-    const slotList = document.getElementById("slotList");
-    const addSlotBtn = document.getElementById("addSlotBtn");
-    const saveTimeBtn = document.getElementById("saveTimeBtn");
-    const clearAllTimeBtn = document.getElementById("clearAllTimeBtn");
-    const cancelTimeBtn = document.getElementById("cancelTimeBtn");
-    let currentEditName = null;
-    let workingSlots = [];
-
-    function openEditTime(name){
-      currentEditName = name;
-      editTarget.textContent = name;
-      const existing = getTimes(name);
-      workingSlots = Array.isArray(existing) ? [...existing] : [];
-      drawSlotList();
-      document.getElementById("timeInput").value = "";
-      editModalBackdrop.style.display = "flex";
-      editModalBackdrop.setAttribute("aria-hidden","false");
+    function speakText(text) {
+        if (!soundEnabled) return;
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1;
+            const voices = window.speechSynthesis.getVoices();
+            const googleVoice = voices.find(v => v.name.includes('Google US English'));
+            if (googleVoice) utterance.voice = googleVoice;
+            window.speechSynthesis.speak(utterance);
+        }
     }
 
-    function drawSlotList(){
-      slotList.innerHTML = '';
-      if(!workingSlots.length){
-        const empty = document.createElement("div");
-        empty.style.color = "#e9dfb8"; empty.textContent = "Belum ada slot kustom.";
-        slotList.appendChild(empty);
-      } else {
-        workingSlots.forEach((t, idx)=>{
-          const wrap = document.createElement("div");
-          wrap.style.display = "flex"; wrap.style.gap = "8px"; wrap.style.alignItems = "center";
-          wrap.style.border = "1px solid var(--stroke)"; wrap.style.padding = "6px 8px"; wrap.style.borderRadius = "10px";
-          wrap.innerHTML = `<strong>#${idx+1}</strong>`;
-          const input = document.createElement("input");
-          input.type = "time"; input.value = t; input.onchange = ()=>{ workingSlots[idx] = input.value; };
-          const del = document.createElement("button");
-          del.className = "btn rose"; del.textContent = "Hapus"; del.onclick = ()=>{ workingSlots.splice(idx,1); drawSlotList(); };
-          wrap.append(input, del);
-          slotList.appendChild(wrap);
-        });
-      }
+    function triggerFullAlert(marketName) {
+        playDing();
+        setTimeout(() => {
+            speakText(`${marketName} Bet Close`);
+        }, 300);
     }
 
-    addSlotBtn.onclick = ()=>{
-      const val = document.getElementById("timeInput").value;
-      if(!val){ toast("Isi jam dulu"); return; }
-      if(!/^\d{2}:\d{2}$/.test(val)){ toast("Format jam HH:MM"); return; }
-      if(!workingSlots.includes(val)) workingSlots.push(val);
-      document.getElementById("timeInput").value = ""; drawSlotList();
-    };
+    // --- CORE FUNCTIONS ---
 
-    saveTimeBtn.onclick = ()=>{
-      if(!currentEditName) return;
-      customTimes.set(currentEditName, [...workingSlots]);
-      persistTimes();
-      toast("Slot kustom disimpan");
-      closeEditTime(); render();
-    };
-    clearAllTimeBtn.onclick = ()=>{
-      if(!currentEditName) return;
-      workingSlots = [];
-      customTimes.delete(currentEditName);
-      persistTimes();
-      toast("Semua slot kustom dihapus");
-      closeEditTime(); render();
-    };
-    cancelTimeBtn.onclick = ()=>{ closeEditTime(); };
-    editModalBackdrop.addEventListener("click",(e)=>{ if(e.target===editModalBackdrop) closeEditTime(); });
-    function closeEditTime(){
-      editModalBackdrop.style.display = "none";
-      editModalBackdrop.setAttribute("aria-hidden","true");
-      currentEditName = null; workingSlots = [];
-    }
-    function persistTimes(){
-      const obj = {};
-      customTimes.forEach((v,k)=>{ obj[k]=v; });
-      localStorage.setItem(STORAGE_TIMES, JSON.stringify(obj));
+    function updateDateTime() {
+        const now = new Date();
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        
+        const dayName = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        document.getElementById('dateDisplay').textContent = `${dayName}, ${date} ${month} ${year}`;
+        document.getElementById('timeDisplay').innerHTML = `${hours}<span class="time-separator">:</span>${minutes}<span class="time-separator">:</span>${seconds}`;
     }
 
-    // ===================== NOTIFICATIONS =====================
-    let notifTimer = null;
-    function toggleNotif(){
-      if(!('Notification' in window)){ toast("Browser tidak mendukung notifikasi"); return; }
-      if(!notifOptIn){
-        Notification.requestPermission().then(p=>{
-          if(p==="granted"){ notifOptIn = true; localStorage.setItem(STORAGE_NOTIF,"1"); toast("Notifikasi ON"); scheduleNotifications(); }
-          else toast("Izin ditolak");
-        });
-      } else {
-        notifOptIn = false; localStorage.setItem(STORAGE_NOTIF,"0"); clearTimeout(notifTimer); toast("Notifikasi OFF");
-      }
-      buildControls();
-    }
-    function scheduleNotifications(){
-      if(!('Notification' in window) || !notifOptIn) return;
-      if(notifTimer) clearTimeout(notifTimer);
-      const now = Date.now();
-      const rows = buildModel().filter(p=>p.nextTs && p.nextTs>now && !doneMap.get(p.name))
-                               .sort((a,b)=>a.nextTs-b.nextTs);
-      if(!rows.length) return;
-      const next = rows[0];
-      const fiveMinBefore = next.nextTs - 5*60*1000;
-      const delay = Math.max(0, fiveMinBefore - now);
-      notifTimer = setTimeout(()=>{
-        new Notification("Pengingat Result", { body: `${next.name} 5 menit lagi (${next.nextLabel})` });
-      }, delay);
+    function parseTimeToMinutes(timeStr) {
+        const [time] = timeStr.split(' ');
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
     }
 
-    // ===================== VPN =====================
-    const vpnModalBackdrop = document.getElementById("vpnModalBackdrop");
-    const vpnProviderSel = document.getElementById("vpnProvider");
-    const vpnCountrySel  = document.getElementById("vpnCountry");
-    const vpnCustomInput = document.getElementById("vpnCustom");
-    const vpnTestBtn = document.getElementById("vpnTestBtn");
-    const vpnSaveBtn = document.getElementById("vpnSaveBtn");
-    const vpnCancelBtn = document.getElementById("vpnCancelBtn");
-
-    function openVpnModal(){
-      vpnProviderSel.value = vpnSettings.provider || "custom";
-      vpnCountrySel.value  = vpnSettings.country || "eu";
-      vpnCustomInput.value = vpnSettings.custom || "";
-      vpnModalBackdrop.style.display = "flex";
-      vpnModalBackdrop.setAttribute("aria-hidden","false");
-    }
-    function closeVpnModal(){
-      vpnModalBackdrop.style.display = "none";
-      vpnModalBackdrop.setAttribute("aria-hidden","true");
-    }
-    vpnCancelBtn.onclick = closeVpnModal;
-    vpnTestBtn.onclick = ()=>{
-      const uri = buildVpnDeepLink();
-      if(!uri){ toast("Atur deep link VPN dulu"); return; }
-      tryOpenDeepLink(uri);
-      toast("Mencoba membuka aplikasi VPN…");
-    };
-    vpnSaveBtn.onclick = ()=>{
-      vpnSettings = {
-        provider: vpnProviderSel.value,
-        country: vpnCountrySel.value,
-        custom: vpnCustomInput.value.trim()
-      };
-      localStorage.setItem(STORAGE_VPN, JSON.stringify(vpnSettings));
-      toast("Pengaturan VPN disimpan"); closeVpnModal();
-    };
-    vpnModalBackdrop.addEventListener("click",(e)=>{ if(e.target===vpnModalBackdrop) closeVpnModal(); });
-
-    function buildVpnDeepLink(){
-      const prov = vpnProviderSel.value;
-      const country = vpnCountrySel.value;
-      if(prov==="custom"){
-        const deepLink = vpnCustomInput.value.trim();
-        return deepLink || null;
-      }
-      const map = {
-        nord: (c) => `nordvpn://connect${c && c !== "eu" ? "?country=" + c : ""}`,
-        surf: (c) => `surfshark://connect${c && c !== "eu" ? "?server=" + c : ""}`,
-        express: ()=> `expressvpn://`,
-        proton:  ()=> `protonvpn://`
-      };
-      const f = map[prov]; return f ? f(country) : null;
-    }
-    function tryOpenDeepLink(uri){ window.location.href = uri; }
-    function connectVPNThenOpen(targetUrl){
-      const uri = buildVpnDeepLink();
-      if(!uri){ toast("Atur VPN dulu di Quick Connect"); openVpnModal(); return; }
-      tryOpenDeepLink(uri);
-      toast("Menghubungkan VPN (EU)… membuka link sesaat lagi");
-      setTimeout(()=>{ window.open(targetUrl, "_blank"); }, 5000);
+    function isActiveDay(data) {
+        if (!data.activeDays) return true;
+        const now = new Date();
+        return data.activeDays.includes(now.getDay());
     }
 
-    // Batch open AMERICA setelah VPN
-    openAmericaBtn.onclick = ()=>{
-      const uri = buildVpnDeepLink();
-      if(!uri){ toast("Atur VPN dulu di Quick Connect"); openVpnModal(); return; }
-      tryOpenDeepLink(uri);
-      toast("Menyambung VPN EU… membuka semua link AMERICA sebentar lagi");
-      setTimeout(()=>{
-        pasaran.filter(p=>p.region==="AMERICA").slice(0,8).forEach(p=> window.open(p.link, "_blank"));
-      }, 6000);
-    };
-
-    // ===================== IP REGION =====================
-    async function checkIPRegion(){
-      try{
-        const res = await fetch("https://ipapi.co/json/");
-        if(!res.ok) throw new Error("IP API gagal");
-        const data = await res.json();
-        const msg = `IP: ${data.ip} • ${data.city||"-"}, ${data.region||"-"}, ${data.country_name||"-"}`;
-        const span = document.createElement("span");
-        span.textContent = msg; span.style.color = "#fff";
-        legendEl.appendChild(span);
-        toast("IP region diperbarui");
-      }catch(e){
-        toast("Gagal cek IP (CORS). Coba manual di whatismyipaddress.com");
-      }
+    function getNextActiveDay(data) {
+        if (!data.activeDays) return null;
+        const now = new Date();
+        const currentDay = now.getDay();
+        const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        for (let i = 1; i <= 7; i++) {
+            const nextDay = (currentDay + i) % 7;
+            if (data.activeDays.includes(nextDay)) return dayNames[nextDay];
+        }
+        return null;
     }
 
-    // ===================== EKSPOR / IMPOR =====================
-    function exportSettings(){
-      const blob = new Blob([JSON.stringify({
-        times: Object.fromEntries(customTimes.entries()),
-        done: Array.from(doneMap.entries()),
-        vpn: vpnSettings,
-        notif: notifOptIn ? 1 : 0,
-        tzOffset: Number.isFinite(tzOffset) ? tzOffset : null
-      }, null, 2)], {type:"application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = `pasaran_settings_${new Date().toISOString().slice(0,10)}.json`; a.click();
-      URL.revokeObjectURL(url);
-    }
-    function importSettings(){
-      const input = document.createElement("input");
-      input.type = "file"; input.accept = "application/json";
-      input.onchange = ()=>{
-        const file = input.files?.[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = ()=>{
-          try{
-            const obj = JSON.parse(reader.result);
-            if(obj.times){
-              localStorage.setItem(STORAGE_TIMES, JSON.stringify(obj.times));
-              const m = new Map(Object.entries(obj.times));
-              customTimes.clear();
-              m.forEach((v,k)=>customTimes.set(k,v));
+    function getNextActiveDayDate(data) {
+        if (!data.activeDays) return null;
+        const now = new Date();
+        const currentDay = now.getDay();
+        for (let i = 1; i <= 7; i++) {
+            const nextDay = (currentDay + i) % 7;
+            if (data.activeDays.includes(nextDay)) {
+                return { daysToAdd: i, dayOfWeek: nextDay };
             }
-            if(obj.done){ localStorage.setItem(STORAGE_DONE, JSON.stringify(obj.done)); }
-            if(obj.vpn){ vpnSettings = obj.vpn; localStorage.setItem(STORAGE_VPN, JSON.stringify(vpnSettings)); }
-            if(obj.notif !== undefined){ notifOptIn = !!obj.notif; localStorage.setItem(STORAGE_NOTIF, notifOptIn?"1":"0"); }
-            if(obj.tzOffset !== undefined && obj.tzOffset !== null){
-              tzOffset = parseFloat(obj.tzOffset);
-              localStorage.setItem(STORAGE_TZ, String(tzOffset));
+        }
+        return null;
+    }
+
+    function calculateCountdown(tutupTime, bukaTime, data) {
+        const now = new Date();
+        const currentDay = now.getDay();
+        
+        if (!isActiveDay(data)) {
+            return { isHoliday: true, nextActiveDay: getNextActiveDay(data) };
+        }
+        
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const tutupMinutes = parseTimeToMinutes(tutupTime);
+        const bukaMinutes = parseTimeToMinutes(bukaTime);
+        
+        let diff;
+        let phase;
+        
+        if (currentMinutes < tutupMinutes) {
+            diff = tutupMinutes - currentMinutes;
+            phase = 'countdown';
+        }
+        else if (currentMinutes >= tutupMinutes && currentMinutes < bukaMinutes) {
+            return { isBetClose: true, isHoliday: false };
+        }
+        else {
+            const tomorrow = (currentDay + 1) % 7;
+            const isTomorrowActive = !data.activeDays || data.activeDays.includes(tomorrow);
+            if (isTomorrowActive) {
+                diff = (24 * 60) - currentMinutes + tutupMinutes;
+            } else {
+                const nextActive = getNextActiveDayDate(data);
+                if (nextActive) {
+                    diff = (nextActive.daysToAdd * 24 * 60) - currentMinutes + tutupMinutes;
+                } else {
+                    diff = (24 * 60) - currentMinutes + tutupMinutes;
+                }
             }
-            toast("Impor selesai"); buildControls(); render();
-          }catch(e){ toast("File tidak valid"); }
+            phase = 'countdown';
+        }
+        
+        const hours = Math.floor(diff / 60);
+        const minutes = diff % 60;
+        const seconds = 60 - now.getSeconds();
+        
+        return {
+            hours, minutes, seconds: seconds === 60 ? 0 : seconds,
+            totalMinutes: diff,
+            isHoliday: false, isBetClose: false, phase: phase
         };
-        reader.readAsText(file);
-      };
-      input.click();
     }
 
-    // ===================== BATCH ACTIONS =====================
-    document.getElementById("markAllBtn").onclick = ()=>{
-      const now = Date.now();
-      buildModel().forEach(p=>{
-        if(p.nextTs && p.nextTs>now) doneMap.set(p.name,true);
-      });
-      localStorage.setItem(STORAGE_DONE, JSON.stringify(Array.from(doneMap.entries())));
-      toast("Semua upcoming ditandai DONE"); render();
-    };
-    document.getElementById("resetTodayBtn").onclick = ()=>{
-      localStorage.removeItem(STORAGE_DONE);
-      doneMap.clear(); toast("Status hari ini direset"); render();
-    };
-
-    // ===================== INIT =====================
-    function buildBars(){
-      buildControls();
-      // Tampilkan hari ini
-      const d = new Date();
-      const span = document.createElement("span");
-      span.textContent = `Hari ini: ${d.toLocaleDateString()} • Waktu: ${d.toLocaleTimeString()}`;
-      legendEl.appendChild(span);
+    function formatCountdown(countdown) {
+        if (countdown.isHoliday) return `LIBUR - Next: ${countdown.nextActiveDay}`;
+        if (countdown.isBetClose) return 'BET CLOSE';
+        const h = String(countdown.hours).padStart(2, '0');
+        const m = String(countdown.minutes).padStart(2, '0');
+        const s = String(countdown.seconds).padStart(2, '0');
+        return `${h}:${m}:${s}`;
     }
 
-    // Tidak ada search jadi hapus event listener ini
-    // search.addEventListener("input", ()=>render());
+    function showAlertModal(marketName) {
+        document.getElementById('alertMarketName').textContent = marketName;
+        document.getElementById('alertModal').classList.add('active');
+        triggerFullAlert(marketName);
+    }
 
-    buildBars(); render();
+    function closeAlertModal() {
+        document.getElementById('alertModal').classList.remove('active');
+    }
 
-    // Shortcut keyboard
-    document.addEventListener("keydown",(e)=>{
-      if(e.key==="Escape"){
-        if(editModalBackdrop.getAttribute("aria-hidden")==="false") { 
-          editModalBackdrop.style.display="none"; 
-          editModalBackdrop.setAttribute("aria-hidden","true"); 
+    function updateCountdowns() {
+        document.querySelectorAll('.countdown-timer').forEach((timer, index) => {
+            const data = pasaranData[index];
+            const countdown = calculateCountdown(data.tutup, data.buka, data);
+            timer.textContent = formatCountdown(countdown);
+            
+            timer.className = 'countdown-timer';
+            
+            if (alertStates[data.name] === undefined) alertStates[data.name] = false;
+
+            if (countdown.isHoliday) {
+                timer.classList.add('holiday');
+                alertStates[data.name] = false;
+            } else if (countdown.isBetClose) {
+                timer.classList.add('phase-betclose');
+                if (!alertStates[data.name]) {
+                    showAlertModal(data.name);
+                    alertStates[data.name] = true;
+                }
+            } else {
+                timer.classList.add('phase-countdown');
+                if (countdown.totalMinutes <= 30 && countdown.totalMinutes > 0) {
+                    timer.classList.add('warning');
+                }
+                alertStates[data.name] = false;
+            }
+        });
+    }
+
+    // --- CARD & RESULT FUNCTIONS (UPDATED FOR 3 PRIZE) ---
+
+    function createCard(data, index) {
+        const card = document.createElement('div');
+        card.className = 'ttg-card';
+        card.setAttribute('data-title', data.name.toLowerCase());
+        
+        // Cek data result
+        let resultHtml = '';
+        let resultClass = 'result-display';
+
+        // Normalisasi data lama (string) ke data baru (object)
+        let marketResult = savedResults[data.name];
+        if (typeof marketResult === 'string') {
+            // Jika data lama masih string, anggap itu prize 1
+            marketResult = { p1: marketResult || "" };
+        } else if (!marketResult) {
+            marketResult = { p1: "", p2: "", p3: "" };
         }
-        if(vpnModalBackdrop.getAttribute("aria-hidden")==="false") { 
-          vpnModalBackdrop.style.display="none"; 
-          vpnModalBackdrop.setAttribute("aria-hidden","true");
+
+        // Jika pasaran punya 3 prize
+        if (data.prizeCount === 3) {
+            resultClass += ' multi';
+            resultHtml = `
+                <div class="result-row"><span class="result-label">PRIZE 1:</span><span class="result-val">${marketResult.p1}</span></div>
+                <div class="result-row"><span class="result-label">PRIZE 2:</span><span class="result-val">${marketResult.p2}</span></div>
+                <div class="result-row"><span class="result-label">PRIZE 3:</span><span class="result-val">${marketResult.p3}</span></div>
+            `;
+        } else {
+            // Pasaran 1 prize
+            resultHtml = marketResult.p1;
         }
-        if(helpModal.getAttribute("aria-hidden")==="false") { 
-          helpModal.style.display="none"; 
-          helpModal.setAttribute("aria-hidden","true");
+
+        const liveLink = data.live ? `<a href="${data.live}" target="_blank" class="btn btn-input-result">Live</a>` : '';
+        
+        const iconClock = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+        const iconCalendar = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+        
+        card.innerHTML = `
+            <div class="ttg-card__title">
+                <span>${data.name}</span>
+                <div class="countdown-timer">00:00:00</div>
+                <div id="result-${index}" class="${resultClass}">
+                    ${resultHtml}
+                </div>
+            </div>
+            <div class="ttg-card__body">
+                <div class="ttg-card__row">
+                    <span class="ttg-card__label">${iconCalendar} Hari</span>
+                    <span class="ttg-card__value">${data.days}</span>
+                </div>
+                <div class="ttg-card__row">
+                    <span class="ttg-card__label">${iconClock} Tutup</span>
+                    <span class="ttg-card__value ttg-card__value--tutup">${data.tutup}</span>
+                </div>
+                <div class="ttg-card__row">
+                    <span class="ttg-card__label">${iconClock} Buka</span>
+                    <span class="ttg-card__value ttg-card__value--buka">${data.buka}</span>
+                </div>
+            </div>
+            <div class="ttg-card__footer">
+                <a href="${data.website}" target="_blank" class="btn btn-website">Website</a>
+                <button class="btn btn-input-result" onclick="openResultModal('${data.name}', ${index})">Input Result</button>
+                ${liveLink}
+            </div>
+        `;
+        return card;
+    }
+
+    function renderCards() {
+        const container = document.getElementById('jadwal-kartu');
+        container.innerHTML = '';
+        pasaranData.forEach((data, index) => {
+            container.appendChild(createCard(data, index));
+        });
+        updateCountdowns();
+    }
+
+    // --- MODAL DINAMIS ---
+
+    function openResultModal(marketName, index) {
+        currentEditingMarket = marketName;
+        document.getElementById('resultMarketName').textContent = marketName;
+        
+        const container = document.getElementById('resultInputsContainer');
+        container.innerHTML = ''; // Bersihkan input lama
+
+        const marketData = pasaranData.find(p => p.name === marketName);
+        const isMulti = (marketData && marketData.prizeCount === 3);
+
+        // Ambil data tersimpan
+        let saved = savedResults[marketName];
+        if (typeof saved === 'string') saved = { p1: saved || "", p2: "", p3: "" };
+        else if (!saved) saved = { p1: "", p2: "", p3: "" };
+
+        if (isMulti) {
+            // Buat 3 Input untuk 3 Prize
+            ['1', '2', '3'].forEach(num => {
+                const group = document.createElement('div');
+                group.className = 'input-group';
+                group.innerHTML = `
+                    <label class="input-label">Prize ${num}</label>
+                    <input type="number" id="input-p${num}" class="modal-input" value="${saved['p'+num]}" placeholder="0000" maxlength="4">
+                `;
+                container.appendChild(group);
+            });
+        } else {
+            // Buat 1 Input
+            const group = document.createElement('div');
+            group.className = 'input-group';
+            group.innerHTML = `
+                <label class="input-label">Prize 1</label>
+                <input type="number" id="input-p1" class="modal-input" value="${saved.p1}" placeholder="0000" maxlength="4">
+            `;
+            container.appendChild(group);
         }
-      }
-      if(e.key==="/"){ e.preventDefault(); /* search.focus(); */ }
-      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="f"){ e.preventDefault(); /* search.focus(); */ }
+
+        document.getElementById('resultModal').classList.add('active');
+        
+        // Focus input pertama
+        setTimeout(() => {
+            const firstInput = container.querySelector('.modal-input');
+            if(firstInput) firstInput.focus();
+        }, 100);
+    }
+
+    function closeResultModal() {
+        document.getElementById('resultModal').classList.remove('active');
+        currentEditingMarket = null;
+    }
+
+    function saveResult() {
+        if (!currentEditingMarket) return;
+        
+        const marketData = pasaranData.find(p => p.name === currentEditingMarket);
+        const isMulti = (marketData && marketData.prizeCount === 3);
+        
+        const newData = {
+            p1: document.getElementById('input-p1') ? document.getElementById('input-p1').value : "",
+            p2: "",
+            p3: ""
+        };
+
+        if (isMulti) {
+            newData.p2 = document.getElementById('input-p2') ? document.getElementById('input-p2').value : "";
+            newData.p3 = document.getElementById('input-p3') ? document.getElementById('input-p3').value : "";
+        }
+
+        // Simpan ke localStorage
+        savedResults[currentEditingMarket] = newData;
+        localStorage.setItem('togelResults', JSON.stringify(savedResults));
+
+        // Update UI Kartu (Render ulang bagian tertentu atau semua)
+        // Cara paling aman render ulang semua kartu yang terlihat atau update DOM langsung
+        const index = pasaranData.findIndex(p => p.name === currentEditingMarket);
+        if (index !== -1) {
+            // Kita buat ulang HTML untuk kartu ini agar formatnya benar (single vs multi)
+            const container = document.getElementById('jadwal-kartu');
+            const oldCard = container.children[index];
+            const newCard = createCard(marketData, index);
+            
+            // Animasi flash saat update
+            oldCard.replaceWith(newCard);
+            const displayEl = newCard.querySelector('.result-display');
+            displayEl.style.borderColor = "#fff";
+            displayEl.style.color = "#fff";
+            setTimeout(() => {
+                displayEl.style.borderColor = isMulti ? "rgba(255,255,255,0.05)" : "var(--red-primary)";
+                displayEl.style.color = "var(--red-accent)";
+                if(isMulti) {
+                    const vals = displayEl.querySelectorAll('.result-val');
+                    vals.forEach(v => v.style.color = "var(--red-accent)");
+                }
+            }, 500);
+        }
+
+        closeResultModal();
+    }
+
+    function createSnowflake() {
+        const snowflake = document.createElement("div");
+        snowflake.classList.add("snowflake");
+        snowflake.textContent = "❄";
+        snowflake.style.left = Math.random() * window.innerWidth + "px";
+        snowflake.style.fontSize = Math.random() * 15 + 10 + "px";
+        snowflake.style.animationDuration = Math.random() * 5 + 5 + "s";
+        snowflake.style.opacity = Math.random();
+        document.body.appendChild(snowflake);
+        setTimeout(() => snowflake.remove(), 10000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+        const soundToggle = document.getElementById('soundToggle');
+        const soundText = document.getElementById('soundText');
+
+        renderCards();
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        setInterval(updateCountdowns, 1000);
+        setInterval(createSnowflake, 300);
+
+        searchInput.addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+            const cards = document.querySelectorAll('.ttg-card');
+
+            cards.forEach((card) => {
+                const title = card.getAttribute("data-title").toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = "flex";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            if (searchTerm.length > 0) {
+                searchResults.textContent = visibleCount === 0 
+                    ? `Tidak ditemukan hasil untuk "${searchTerm}"` 
+                    : `Ditemukan ${visibleCount} hasil untuk "${searchTerm}"`;
+            } else {
+                searchResults.textContent = "";
+            }
+        });
+
+        soundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundText.textContent = soundEnabled ? "Sound: ON" : "Sound: OFF";
+            soundToggle.style.borderColor = soundEnabled ? "var(--red-accent)" : "#444";
+            
+            if (soundEnabled) {
+                initAudio();
+                triggerFullAlert("Sound Test");
+            }
+        });
     });
-  </script>
+</script>
+
 </body>
 </html>
