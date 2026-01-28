@@ -39,6 +39,60 @@
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
+        /* --- TOAST NOTIFICATION SYSTEM (FIXED) --- */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200000; /* Z-Index Sangat Tinggi */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none; /* Agar klik tembus */
+            width: 320px;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: rgba(15, 0, 0, 0.95);
+            border-left: 5px solid var(--neon-red);
+            border-right: 1px solid rgba(255, 23, 68, 0.3);
+            border-bottom: 1px solid rgba(255, 23, 68, 0.3);
+            border-top: 1px solid rgba(255, 23, 68, 0.3);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 4px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(255, 23, 68, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+            backdrop-filter: blur(12px);
+        }
+
+        .toast::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,23,68,0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .toast.hiding {
+            animation: slideOut 0.4s ease forwards;
+        }
+
+        .toast-content { display: flex; flex-direction: column; z-index: 2; width: 100%; }
+        .toast-title { font-family: var(--font-head); color: var(--gold-accent); font-size: 0.9rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .toast-msg { color: white; font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px var(--neon-red); }
+
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        /* --- SIDEBAR & MAIN --- */
         .sidebar {
             width: 70px; background: rgba(0,0,0,0.5); border-right:1px solid var(--card-border);
             display: flex; flex-direction: column; align-items: center; padding: 20px 0;
@@ -136,18 +190,10 @@
         
         .card-footer { padding: 15px 20px; border-top: 1px solid var(--card-border); display: flex; gap: 10px; }
         
-        /* TOMBOL UNIFIKASI (INPUT, WEB, LIVE) */
         .btn { flex: 1; padding: 10px; border-radius: 6px; font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; text-align: center; text-transform: uppercase; }
         
-        .btn-input, .btn-web { 
-            background: rgba(255, 23, 68, 0.1); color: var(--neon-red); 
-            border: 1px solid rgba(255, 23, 68, 0.2); 
-        }
-        
-        .btn-input:hover, .btn-web:hover { 
-            background: var(--neon-red); color: white; 
-            box-shadow: 0 0 15px rgba(255, 23, 68, 0.4); 
-        }
+        .btn-input, .btn-web { background: rgba(255, 23, 68, 0.1); color: var(--neon-red); border: 1px solid rgba(255, 23, 68, 0.2); }
+        .btn-input:hover, .btn-web:hover { background: var(--neon-red); color: white; box-shadow: 0 0 15px rgba(255, 23, 68, 0.4); }
 
         .settings-view { display: none; padding: 40px; max-width: 1400px; margin: 0 auto; }
         .settings-view.active { display: block; }
@@ -158,7 +204,7 @@
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px); z-index: 1000; display: none; justify-content: center; align-items: center;
+            backdrop-filter: blur(8px); z-index: 150000; display: none; justify-content: center; align-items: center;
         }
         .modal-overlay.active { display: flex; }
         .modal-content { background: #111; border: 1px solid #333; border-radius: 16px; width: 100%; max-width: 450px; padding: 30px; position: relative; text-align: center; }
@@ -168,14 +214,23 @@
         .btn-save { background: var(--neon-red); color: #fff; }
         .btn-cancel { background: #222; color: #fff; }
 
+        .debug-btn { position: fixed; bottom: 20px; right: 20px; z-index: 50; padding: 10px; background: #333; color: white; border: 1px solid #555; cursor: pointer; opacity: 0.3; }
+        .debug-btn:hover { opacity: 1; }
+
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .main-container { margin-left: 0; width: 100%; }
             .ttg-grid { grid-template-columns: 1fr; }
+            #toast-container { left: 20px; right: 20px; width: auto; }
         }
     </style>
 </head>
 <body>
+
+    <div id="toast-container"></div> <!-- Container Notification -->
+
+    <!-- Tombol Tes Manual (Hanya untuk Debug) -->
+    <button class="debug-btn" onclick="triggerAlert('TEST MARKET')">TEST ALERT POPUP</button>
 
     <div id="introOverlay">
         <div class="intro-content">
@@ -317,32 +372,6 @@
         let audioCtx = null;
         let currentEditingMarket = null;
 
-        /* --- CARA KERJA SCRIPT (EXPLANATION) --- */
-        /*
-        1.  PENGATURAN DATA (defaultData):
-            Script ini punya 'Gudang Data' bawaan (variable defaultData).
-            Saat pertama kali dibuka, script menyalin data ini ke LocalStorage (Penyimpanan Browser).
-            Jadi data tidak hilang kalau di-refresh.
-        
-        2.  LOGIKA JAM (calculateTimer):
-            Setiap 1 detik, script mengejam jam komputer/laptop Anda (new Date).
-            Lalu script bandingkan dengan jam tutup di data pasaran.
-            
-            - Jika jam Sekarang < Jam Tutup: Maka STATUS OPEN.
-            - Jika jam Sekarang >= Jam Tutup AND < Jam Buka: Maka STATUS BET CLOSE.
-            - Jika jam Sekarang >= Jam Buka: Hitung mundur ke tutup besok.
-        
-        3.  KASUS KHUSUS HOKIDRAW:
-            Karena HOKIDRAW result per jam, script memakai logika khusus:
-            - Jika menit 00 - 04: STATUS BET CLOSE.
-            - Jika menit 05 - 59: STATUS OPEN (Hitung mundur ke menit 00 jam berikutnya).
-        
-        4.  ALARM (triggerAlert):
-            Script menyimpan status 'alertStates'.
-            Kalau status berubah dari OPEN ke CLOSE, script memanggil fungsi playAlert() (bunyi) dan speakText() (bicara).
-            Setelah bunyi sekali, status di-LOCK agar tidak bunyi berulang-ulang saat masih status CLOSE.
-        */
-
         function initData() {
             const stored = localStorage.getItem('tvtoto_config_v3');
             if (stored) pasaranData = JSON.parse(stored);
@@ -357,12 +386,14 @@
 
         function playAlert() {
             if (!soundEnabled || !audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.type = 'triangle'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+            } catch(e) { console.log("Audio error:", e); }
         }
 
         function speak(text) {
@@ -372,9 +403,37 @@
             window.speechSynthesis.speak(u);
         }
 
+        /* --- FITUR POP UP (FIXED) --- */
+        function createToast(marketName) {
+            console.log("Creating toast for:", marketName); // Debugging console
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <span class="toast-title">${marketName}</span>
+                    <span class="toast-msg">BET CLOSE</span>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Hapus toast setelah 5 detik
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                toast.addEventListener('animationend', () => {
+                    if(toast.parentElement) toast.remove();
+                });
+            }, 5000);
+        }
+
         function triggerAlert(name) {
-            playAlert();
-            setTimeout(() => speak(`Perhatian, pasaran ${name} bet close`), 200);
+            // Error handling agar visual muncul meskipun audio gagal
+            try { playAlert(); } catch(e){}
+            createToast(name); // Pop Up Visual
+            try { setTimeout(() => speak(`Perhatian, pasaran ${name} bet close`), 200); } catch(e){}
         }
 
         function parseTime(str) {
@@ -391,7 +450,6 @@
             const now = new Date();
             const curMin = now.getHours() * 60 + now.getMinutes();
             
-            // HOKIDRAW LOGIC
             if (data.name === "HOKIDRAW") {
                 const m = now.getMinutes();
                 const s = now.getSeconds();
@@ -403,7 +461,6 @@
                 }
             }
 
-            // NORMAL LOGIC
             if (!isActiveDay(data)) return { status: 'LIBUR' };
             const tutup = parseTime(data.tutup);
             const buka = parseTime(data.buka);
@@ -414,22 +471,24 @@
             return { status: 'ACTIVE', h: Math.floor(diff/60), m: diff%60, s: 60-now.getSeconds() };
         }
 
-        /* --- RENDERING FUNCTIONS --- */
         function renderDashboard() {
             const grid = document.getElementById('jadwal-kartu'); grid.innerHTML = '';
-            pasaranData.forEach((d, i) => {
+            pasaranData.forEach((d) => {
                 const res = savedResults[d.name] || (d.prizeCount===3?{p1:'',p2:'',p3:''}:'');
                 let resHtml = d.prizeCount===3 
                     ? `<div class="res-multi"><div>P1: <b>${res.p1||'--'}</b></div><div>P2: <b>${res.p2||'--'}</b></div><div>P3: <b>${res.p3||'--'}</b></div></div>`
                     : `<div class="res-single">${res.p1||'----'}</div>`;
                 
-                const card = document.createElement('div'); card.className = 'ttg-card';
+                const card = document.createElement('div'); 
+                card.className = 'ttg-card';
+                card.setAttribute('data-name', d.name); // Identitas Unik untuk kartu
+                
                 card.innerHTML = `
-                    <div class="card-header"><div class="market-name">${d.name}</div><div class="timer-box"><div class="timer-display" id="timer-${i}">--:--</div></div></div>
+                    <div class="card-header"><div class="market-name">${d.name}</div><div class="timer-box"><div class="timer-display" id="timer-${d.name.replace(/\s/g,'')}">--:--</div></div></div>
                     <div class="result-area">${resHtml}</div>
                     <div class="card-body"><div class="info-row"><span>Hari</span><b>${d.days}</b></div><div class="info-row"><span>Tutup</span><b style="color:var(--neon-red)">${d.tutup}</b></div><div class="info-row"><span>Buka</span><b style="color:#0f0">${d.buka}</b></div></div>
                     <div class="card-footer">
-                        <button class="btn btn-input" onclick="openResultModal('${d.name}', ${i})">INPUT</button>
+                        <button class="btn btn-input" onclick="openResultModal('${d.name}')">INPUT</button>
                         <a href="${d.website}" target="_blank" class="btn btn-web">WEB</a>
                         ${d.live ? `<a href="${d.live}" target="_blank" class="btn btn-web">LIVE</a>` : ''}
                     </div>
@@ -439,10 +498,13 @@
         }
 
         function updateTimers() {
-            const cards = document.querySelectorAll('.ttg-card');
-            cards.forEach((c, i) => {
-                const d = pasaranData[i];
-                const timer = c.querySelector('.timer-display');
+            // Perbaikan: Loop berdasarkan Data, bukan Kartu, untuk menghindari error saat filter/search
+            pasaranData.forEach((d) => {
+                const safeName = d.name.replace(/\s/g,'');
+                const card = document.querySelector(`.ttg-card[data-name="${d.name}"]`);
+                if (!card) return; // Skip jika kartu tidak ada (seharusnya tidak terjadi)
+
+                const timer = card.querySelector('.timer-display');
                 const calc = calculateTimer(d);
                 timer.className = 'timer-display';
 
@@ -450,25 +512,34 @@
                 else if (calc.status === 'CLOSE') {
                     timer.textContent = calc.text || 'BET CLOSE';
                     if (calc.isHourly) timer.classList.add('result-mode');
-                    if (!alertStates[d.name]) { triggerAlert(d.name); alertStates[d.name] = true; }
+                    
+                    // Trigger Alert hanya jika belum pernah diberi alert di sesi ini
+                    if (!alertStates[d.name]) { 
+                        triggerAlert(d.name); 
+                        alertStates[d.name] = true; 
+                    }
                 } else {
                     if (calc.isHourly) { timer.textContent = `CLOSE: ${String(calc.nextH).padStart(2,'0')}:00`; timer.classList.add('hourly-active'); }
                     else { timer.textContent = `${String(calc.h).padStart(2,'0')}:${String(calc.m).padStart(2,'0')}:${String(calc.s).padStart(2,'0')}`; timer.classList.add('active'); }
-                    alertStates[d.name] = false;
+                    alertStates[d.name] = false; // Reset alert jika sudah OPEN lagi
                 }
             });
         }
 
         function initApp() {
             renderDashboard(); renderSettings();
-            setInterval(() => { document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('id-ID', {hour12:false}); updateTimers(); }, 1000);
+            // Jalankan update setiap detik
+            setInterval(() => { 
+                document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('id-ID', {hour12:false}); 
+                updateTimers(); 
+            }, 1000);
         }
 
         function enterSite() { initAudio(); initData(); document.getElementById('introOverlay').classList.add('hidden'); initApp(); }
 
         function renderSettings() {
             const tbody = document.getElementById('settingsTableBody'); tbody.innerHTML = '';
-            pasaranData.forEach((d, i) => tbody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.tutup}</td><td>${d.buka}</td><td><button class="btn-edit-config" onclick="openConfig(${i})">EDIT</button></td></tr>`);
+            pasaranData.forEach((d) => tbody.innerHTML += `<tr><td><b>${d.name}</b></td><td>${d.tutup}</td><td>${d.buka}</td><td><button class="btn-edit-config" onclick="openConfig('${d.name}')">EDIT</button></td></tr>`);
         }
 
         function switchView(v, b) {
@@ -478,9 +549,8 @@
             b.classList.add('active');
         }
 
-        function openConfig(i) {
-            const d = pasaranData[i];
-            document.getElementById('configIndex').value = i;
+        function openConfig(n) {
+            const d = pasaranData.find(x => x.name === n);
             document.getElementById('configMarketName').textContent = d.name;
             document.getElementById('cfgName').value = d.name;
             document.getElementById('cfgTutup').value = d.tutup.split(' ')[0];
@@ -492,20 +562,23 @@
         }
 
         function saveConfigChanges() {
-            const i = document.getElementById('configIndex').value;
-            pasaranData[i].name = document.getElementById('cfgName').value;
-            pasaranData[i].tutup = document.getElementById('cfgTutup').value + " WIB";
-            pasaranData[i].buka = document.getElementById('cfgBuka').value + " WIB";
-            pasaranData[i].website = document.getElementById('cfgWeb').value;
-            pasaranData[i].live = document.getElementById('cfgLive').value;
-            pasaranData[i].prizeCount = parseInt(document.getElementById('cfgPrize').value);
-            localStorage.setItem('tvtoto_config_v3', JSON.stringify(pasaranData));
-            renderSettings(); renderDashboard(); closeConfigModal();
+            const n = document.getElementById('cfgName').value;
+            const d = pasaranData.find(x => x.name === n);
+            if(d) {
+                d.name = n;
+                d.tutup = document.getElementById('cfgTutup').value + " WIB";
+                d.buka = document.getElementById('cfgBuka').value + " WIB";
+                d.website = document.getElementById('cfgWeb').value;
+                d.live = document.getElementById('cfgLive').value;
+                d.prizeCount = parseInt(document.getElementById('cfgPrize').value);
+                localStorage.setItem('tvtoto_config_v3', JSON.stringify(pasaranData));
+                renderSettings(); renderDashboard(); closeConfigModal();
+            }
         }
         function closeConfigModal() { document.getElementById('configModal').classList.remove('active'); }
         function resetConfig() { if(confirm("Reset?")) { localStorage.removeItem('tvtoto_config_v3'); pasaranData = JSON.parse(JSON.stringify(defaultData)); renderSettings(); renderDashboard(); } }
 
-        function openResultModal(n, i) {
+        function openResultModal(n) {
             currentEditingMarket = n;
             document.getElementById('resModalMarket').textContent = n;
             const c = document.getElementById('inputContainer'); c.innerHTML = '';
@@ -530,7 +603,10 @@
             soundEnabled = !soundEnabled; this.querySelector('span').textContent = soundEnabled ? 'Sound: ON' : 'Sound: OFF'; this.classList.toggle('active'); if(soundEnabled) initAudio();
         };
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            document.querySelectorAll('.ttg-card').forEach(c => c.style.display = c.querySelector('.market-name').textContent.toLowerCase().includes(e.target.value.toLowerCase()) ? 'flex' : 'none');
+            document.querySelectorAll('.ttg-card').forEach(c => {
+                const name = c.getAttribute('data-name');
+                c.style.display = name.toLowerCase().includes(e.target.value.toLowerCase()) ? 'flex' : 'none';
+            });
         });
     </script>
 </body>
