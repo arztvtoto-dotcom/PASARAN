@@ -441,7 +441,7 @@ input[type=range].vol::-webkit-slider-thumb:hover{transform:scale(1.3);}
 
 <script>
 const DD=[
-  {name:"HOKI DRAW",tts:"HOKI DRAW",days:"Result 1 Jam Sekali (24x)",tutup:"00:00 WIB",buka:"00:00 WIB",website:"https://hokidraw.com/",live:"https://dlive.tv/u/HOKIDRAW",prizeCount:1},
+  {name:"HOKI DRAW",tts:"hoki draw",days:"Result 1 Jam Sekali (24x)",tutup:"00:00 WIB",buka:"00:00 WIB",website:"https://hokidraw.com/",live:"https://dlive.tv/u/HOKIDRAW",prizeCount:1},
   {name:"TOTO MACAU PAGI",tts:"TOTO MACAU PAGI",days:"Senin s/d Minggu",tutup:"00:00 WIB",buka:"00:15 WIB",website:"https://totomacaunew.us/",live:"https://kick.com/live-ttm4d"},
   {name:"HUA HIN 0100",tts:"HUA HIN nol satu nol nol",days:"Senin s/d Minggu",tutup:"00:45 WIB",buka:"01:00 WIB",website:"https://huahinlottery.com/",live:null},
   {name:"NEW YORK MIDDAY",tts:"NEW YORK MIDDAY",days:"Senin s/d Minggu",tutup:"02:15 WIB",buka:"02:25 WIB",website:"https://nylottery.ny.gov/",live:null},
@@ -646,9 +646,9 @@ function toast(mkt,type){
 }
 
 /* ─── TRIGGERS ─── */
-function trigC(n,tts){setMS(n,'bc',true);beep('c');toast(n,'close');addLog(n,'CLOSE');say(`Perhatian. Pasaran ${tts} sudah tutup. Segera hentikan pemasangan.`);bc.postMessage({a:'c',n});}
+function trigC(n,tts){setMS(n,'bc',true);beep('c');toast(n,'close');addLog(n,'CLOSE');say(`Perhatian. Pasaran ${tts} BED CLOSE. .`);bc.postMessage({a:'c',n});}
 function trigR(n,tts){setMS(n,'res',true);beep('r');toast(n,'result');addLog(n,'RESULT');say(`Result pasaran ${tts} sudah keluar. Silakan cek sekarang.`);bc.postMessage({a:'r',n});}
-bc.onmessage=e=>{if(e.data.a==='c'){toast(e.data.n,'close');say(`Perhatian. Pasaran ${e.data.n} sudah tutup.`);}if(e.data.a==='r'){toast(e.data.n,'result');addLog(e.data.n,'RESULT');say(`Result pasaran ${e.data.n} sudah keluar.`);}};
+bc.onmessage=e=>{if(e.data.a==='c'){toast(e.data.n,'close');say(`Perhatian. Pasaran ${e.data.n} BED CLOSE.`);}if(e.data.a==='r'){toast(e.data.n,'result');addLog(e.data.n,'RESULT');say(`Result pasaran ${e.data.n} sudah keluar.`);}};
 
 /* ─── RENDER ─── */
 function renderDash(){
@@ -746,7 +746,7 @@ function enterSite(){
   setInterval(()=>{tick();updTimers();},1000);
   document.getElementById('searchIn').addEventListener('input',applyF);
   document.getElementById('volSl').addEventListener('input',e=>{vol=parseFloat(e.target.value);});
-  setTimeout(()=>say('HALO INDRA WUUUUU..'),900);
+  setTimeout(()=>say('HALO CS tvtoto..'),900);
 }
 // ====== ANTI VIEW SOURCE & INSPECT PROTECTION ======
 
